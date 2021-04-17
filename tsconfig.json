@@ -42,12 +42,5 @@
     "exclude": [
         "node_modules",
         "**/*.spec.ts"
-    ],
-    "typeRoots": ["/node_modules/@types", "@types"],
-    "types": [
-      "ts-node",
-      "node",
-      "webpack",
-      "webpack-env"
     ]
   }
