@@ -14,8 +14,8 @@ const App: FC = () => {
         <Button>
           Test
         </Button>
-        <RadioButton id='test'/>
-        <label htmlFor='test'>Testing radio button</label>
+        <RadioButton id='test' value={'A favor ✅'} onChange={e => console.log(e)}/>
+        <label htmlFor='test'>Testing radio button ✅</label>
         <TextInput placeholder='Test Input'/>
       </QuizCard>
     </Page>
