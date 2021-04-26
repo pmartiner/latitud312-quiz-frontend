@@ -27,6 +27,10 @@ const webpackConfig = (env): Configuration => ({
     devServer: {
       contentBase: path.join(__dirname, 'public'),
       compress: true,
+      // hot: true,
+      watchContentBase: true,
+      liveReload: true,
+      open: true,
       port: 3000
     },
     output: {

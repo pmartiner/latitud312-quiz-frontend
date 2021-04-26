@@ -1,6 +1,25 @@
-import React from 'react';
-import HelloWorld from 'components/HelloWorld';
+import React, { FC } from 'react';
 
-const App = (): JSX.Element => <HelloWorld />;
+import Page from 'components/layout/Page';
+import QuizCard from 'components/Card/QuizCard';
+import Button from 'components/Button/Button';
+import RadioButton from 'components/FormElements/RadioButton';
+import TextInput from 'components/FormElements/TextInput';
+
+const App: FC = () => {
+  return (
+    <Page>
+      <QuizCard>
+        La pregunta del millón.
+        <Button>
+          Test
+        </Button>
+        <RadioButton id='test' value={'A favor ✅'} onChange={e => console.log(e)}/>
+        <label htmlFor='test'>Testing radio button ✅</label>
+        <TextInput placeholder='Test Input'/>
+      </QuizCard>
+    </Page>
+  );
+};
 
 export default App;
