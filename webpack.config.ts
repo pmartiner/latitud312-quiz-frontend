@@ -23,8 +23,14 @@ const webpackConfig = (env): Configuration => ({
       }
     },
     devServer: {
-      contentBase: path.join(__dirname, "public"),
+      contentBase: [
+        path.join(__dirname, "public")
+      ],
       compress: true,
+      // hot: true,
+      watchContentBase: true,
+      liveReload: true,
+      open: true,
       port: 3000
     },
     output: {
@@ -48,7 +54,7 @@ const webpackConfig = (env): Configuration => ({
                 '@babel/preset-react',
                 {
                   useBuiltIns: 'usage',
-                  corejs: '3.6.5'
+                  corejs: 3
                 }
               ]
             },
