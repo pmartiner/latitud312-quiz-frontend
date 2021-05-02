@@ -4,15 +4,16 @@ import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-serv
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
 }
 
 const webpackConfig = (env): Configuration => ({
-    entry: './src/index.tsx',
+    entry: {
+      polyfills: './src/config/polyfills.ts',
+      index: './src/index.tsx',
+    },
     ...(env.production || !env.development ? {} : {devtool: 'eval-source-map'}),
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
@@ -27,16 +28,16 @@ const webpackConfig = (env): Configuration => ({
     devServer: {
       contentBase: path.join(__dirname, 'public'),
       compress: true,
-      // hot: true,
-      watchContentBase: true,
-      liveReload: true,
+      hot: true,
+      // watchContentBase: true,
+      // liveReload: true,
       overlay: true,
       open: true,
       port: 3000
     },
     output: {
-      path: path.join(__dirname, '/dist'),
-      filename: 'build.js'
+      path: path.join(__dirname, 'dist'),
+      filename: '[name]-[contenthash].js'
     },
     module: {
       rules: [
@@ -52,11 +53,19 @@ const webpackConfig = (env): Configuration => ({
             loader: 'babel-loader',
             options: {
               presets: [
-                '@babel/preset-react',
-                {
-                  useBuiltIns: 'usage',
-                  corejs: 3,
-                }
+                [
+                  '@babel/preset-env',
+                  {
+                    useBuiltIns: 'usage',
+                    corejs: 3,
+                  }
+                ],
+                [
+                  '@babel/preset-react',
+                  {
+                    runtime: 'automatic'
+                  }
+                ]
               ]
             },
             

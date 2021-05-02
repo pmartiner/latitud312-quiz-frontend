@@ -6,10 +6,10 @@ import styled from 'styled-components';
 import { ACCENT_COLOR_DARK, PRIMARY_COLOR } from 'components/layout/const';
 
 const ButtonComponent = styled.button`
-  background-color: ${ACCENT_COLOR_DARK};
-  border: 3px solid ${ACCENT_COLOR_DARK};
+  background-color: ${props => props.disabled ? '#757575' : ACCENT_COLOR_DARK};
+  border: 3px solid ${props => props.disabled ? '#757575' : ACCENT_COLOR_DARK};;
   border-radius: 6px;
-  cursor: pointer;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
   padding: 10px 25px;
   min-width: 30px;
   max-width: 250px;
@@ -18,12 +18,12 @@ const ButtonComponent = styled.button`
   transition: all .3s;
 
   :hover, :active {
-    background-color: ${PRIMARY_COLOR};
-    border-color: ${PRIMARY_COLOR};
+    background-color: ${props => props.disabled ? '#757575' : PRIMARY_COLOR};
+    border-color: ${props => props.disabled ? '#757575' : PRIMARY_COLOR};
   }
 
   :focus {
-    background-color: ${PRIMARY_COLOR};
+    background-color: ${props => props.disabled ? '#757575' : PRIMARY_COLOR};
     border-color: ${ACCENT_COLOR_DARK};
   }
 `;

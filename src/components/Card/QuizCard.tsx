@@ -16,7 +16,7 @@ const CardWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
-  max-height: 60vh;
+  max-height: 75vh;
   max-width: 60vw;
   overflow: auto;
   position: relative;
