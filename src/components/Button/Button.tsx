@@ -14,7 +14,7 @@ const ButtonComponent = styled.button`
   min-width: 30px;
   max-width: 250px;
   color: white;
-  font-size: 14px;
+  font-size: 18px;
   transition: all .3s;
 
   :hover, :active {

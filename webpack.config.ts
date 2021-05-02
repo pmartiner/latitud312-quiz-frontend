@@ -30,6 +30,7 @@ const webpackConfig = (env): Configuration => ({
       // hot: true,
       watchContentBase: true,
       liveReload: true,
+      overlay: true,
       open: true,
       port: 3000
     },

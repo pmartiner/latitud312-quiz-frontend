@@ -12,15 +12,16 @@ const CardWrapper = styled.div`
   background-color: white;
   border: 7px solid ${ACCENT_COLOR_DARK};
   border-radius: 5px;
-  padding: 30px;
   width: 100%;
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
-  max-height: 80vh;
-  max-width: 70vw;
+  max-height: 60vh;
+  max-width: 60vw;
+  overflow: auto;
+  position: relative;
 
-  @media screen and (max-width: 480px) {
+  @media screen and (max-width: 768px) {
     max-height: 90%;
     max-width: 90vw;
   }

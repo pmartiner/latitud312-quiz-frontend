@@ -2,10 +2,13 @@
 import styled from 'styled-components';
 
 // Colores
-import { ACCENT_COLOR_DARK } from 'components/layout/const';
+import { ACCENT_COLOR_DARK, ERROR_COLOR } from 'components/layout/const';
 
-const TextInput = styled.input`
-  border: 2px solid ${ACCENT_COLOR_DARK};
+// Types
+import { InputType } from 'src/types/index';
+
+const TextInput = styled.input<InputType>`
+  border: 2px solid ${props => props.error ? ERROR_COLOR : ACCENT_COLOR_DARK};
   border-radius: 6px;
   padding: 5px;
   width: 200px;
