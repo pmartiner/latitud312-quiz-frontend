@@ -367,7 +367,7 @@ const App: FC = () => {
             <LoaderContainer>
               <Loader />
               <LoaderLabel>
-              Cargando...
+                Cargando...
               </LoaderLabel>
             </LoaderContainer> :
             renderContent()}
