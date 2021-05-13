@@ -13,7 +13,7 @@ import RadioButton from 'components/FormElements/RadioButton';
 import TextInput from 'components/FormElements/TextInput';
 
 // Tipos
-import { QuizQuestionsType } from 'src/types';
+import { QuizQuestionsType } from 'types/index';
 
 const CardQuestion = styled.label`
   font-size: 30px;
@@ -190,11 +190,11 @@ const App: FC = () => {
 
   // Temp
   const later = (delay, value) => {
-    let timeout: NodeJS.Timeout | number | null = null;
-    let reject: ((reason?: any) => void) | null = null;
+    let timeout = 0;
+    let reject: (() => void) | null = null;
     const promise = new Promise((resolve, _reject) => {
       reject = _reject;
-      timeout = setTimeout(resolve, delay, value);
+      timeout = window.setTimeout(resolve, delay, value);
     });
     return {
       get promise() { return promise; },
@@ -234,7 +234,7 @@ const App: FC = () => {
     }
   };
 
-  const renderIntroCard = (): JSX.Element => {
+  const renderIntroCard = () => {
     return (
       <FullSizeFade>
         <CardContentContainer>
@@ -257,7 +257,7 @@ const App: FC = () => {
     );
   };
 
-  const renderZipCodeCard = (): JSX.Element => {
+  const renderZipCodeCard = () => {
     return (
       <FullSizeFade>
         <CardZipCodeContentContainer onSubmit={handleZipCodeSubmit}>
@@ -291,7 +291,7 @@ const App: FC = () => {
     );
   };
 
-  const renderQuizCard = (): JSX.Element => {
+  const renderQuizCard = () => {
     const cardValues = QUIZ.quiz.pages[currentPage].input.values.map((val, i) => {
       if (QUIZ.quiz.pages[currentPage].input.type === 'radio') {
         return (
@@ -347,7 +347,7 @@ const App: FC = () => {
     );
   };
 
-  const renderContent = (): JSX.Element => {
+  const renderContent = () => {
     if (currentPage === -2) {
       return renderIntroCard();
     } else if (currentPage === -1) {

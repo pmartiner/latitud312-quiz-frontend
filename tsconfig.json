@@ -30,13 +30,19 @@
       "typeRoots": ["@types"],
       "baseUrl": "./",
       "paths": {
+        "src/*": [
+          "src/*"
+        ],
+        "types/*": [
+          "src/types/*"
+        ],
         "components/*": [
           "src/components/*"
         ]
       }
     },
     "include": [
-      "src",
+      "./src",
       "webpack.config.ts",
       "src/**/*.ts",
       "src/**/*.tsx",

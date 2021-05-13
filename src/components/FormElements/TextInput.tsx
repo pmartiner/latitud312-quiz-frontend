@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { ACCENT_COLOR_DARK, ERROR_COLOR } from 'components/layout/const';
 
 // Types
-import { InputType } from 'src/types/index';
+import { InputType } from 'types/index';
 
 const TextInput = styled.input<InputType>`
   border: 2px solid ${props => props.error ? ERROR_COLOR : ACCENT_COLOR_DARK};

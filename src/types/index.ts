@@ -1,5 +1,7 @@
+import { ReactNode } from 'react';
+
 export type ChildrenProps = {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export type InputType = {

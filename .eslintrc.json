@@ -6,7 +6,12 @@
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "eslint:recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -21,15 +26,27 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint",
-        "react-hooks"
+        "@typescript-eslint"
     ],
     "settings": {
         "react": {
           "version": "detect"
+        },
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".ts", ".tsx", ".d.ts"],
+                "paths": ["src"]
+            }
         }
     },
     "rules": {
+        "import/no-unresolved": [
+            2,
+            {
+              "ignore": [
+                ".(png|svg|jpg|gif)$"
+              ]
+            }],
         "indent": [
             "error",
             2
@@ -45,8 +62,6 @@
         "semi": [
             "error",
             "always"
-        ],
-        "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "warn"
+        ]
     }
 }

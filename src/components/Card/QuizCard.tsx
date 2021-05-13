@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 
 // Tipos
-import { ChildrenProps } from 'src/types';
+import { ChildrenProps } from 'types/index';
 
 // Colores
 import { ACCENT_COLOR_DARK } from 'components/layout/const';
