@@ -133,7 +133,7 @@ const QUIZ: QuizQuestionsType = {
   quiz: {
     pages: [
       {
-        question: 'Hola, ¿cómo estás?',
+        question: 'Hla, ¿cómo estás?',
         input: {
           type: 'radio',
           values: [
@@ -142,7 +142,7 @@ const QUIZ: QuizQuestionsType = {
               value: 'A favor'
             },
             {
-              label: 'Indeciso/a',
+              label: 'Indeciso/a 🤔',
               value: 'Indecisión'
             },
             {
@@ -190,7 +190,7 @@ const App: FC = () => {
 
   // Temp
   const later = (delay, value) => {
-    let timeout: NodeJS.Timeout | null = null;
+    let timeout: NodeJS.Timeout | number | null = null;
     let reject: ((reason?: any) => void) | null = null;
     const promise = new Promise((resolve, _reject) => {
       reject = _reject;
@@ -199,7 +199,7 @@ const App: FC = () => {
     return {
       get promise() { return promise; },
       cancel() {
-        if (timeout && reject && Math.random() <= 0.2) {
+        if (typeof timeout === 'number' && timeout && reject && Math.random() <= 0.2) {
           clearTimeout(timeout);
           reject();
           reject = null;
