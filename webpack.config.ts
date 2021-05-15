@@ -61,6 +61,7 @@ const webpackConfig = (env: EnvVars): Configuration => {
       alias: {
         'src': path.resolve(__dirname, 'src/'),
         'components': path.resolve(__dirname, 'src/components/'),
+        'types': path.resolve(__dirname, 'src/types/'),
       }
     },
     target: env.development ? 'web' : 'browserslist',
@@ -139,7 +140,6 @@ const webpackConfig = (env: EnvVars): Configuration => {
             files: './src/**/*.{ts,tsx,js,jsx}' // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
           }
         }),
-        () => new webpack.HotModuleReplacementPlugin(),
         () => env.development && new ReactRefreshPlugin({
           overlay: {
             sockIntegration: 'wds',

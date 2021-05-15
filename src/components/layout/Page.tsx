@@ -14,7 +14,6 @@ const PageBackground = styled.section`
   width: 100%;
   height: 100vh;
   display: flex;
-  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
 `;

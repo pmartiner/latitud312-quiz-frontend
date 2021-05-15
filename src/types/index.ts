@@ -14,6 +14,7 @@ type QuizInputType = {
 };
 
 type QuizPagesType = {
+  id: string;
   question: string;
   input: {
     type: string;
@@ -25,4 +26,26 @@ export type QuizQuestionsType = {
   quiz: {
     pages: QuizPagesType[];
   };
+}
+
+type PartyType = {
+  id: string;
+  name: string;
+  logo: string;
+}
+
+type SubType = {
+  id: string;
+  fullName: string;
+}
+
+export type RepAnswersType = {
+  id: string;
+  fullName: string;
+  photo: string;
+  previousParty: PartyType;
+  currentParty: PartyType;
+  sub: SubType;
+  answers: string[];
+  district: string;
 }
