@@ -1,9 +1,6 @@
 // Bibliotecas
-import React, { FC } from 'react';
+import React, { FC, HTMLAttributes } from 'react';
 import styled from 'styled-components';
-
-// Tipos
-import { ChildrenProps } from 'types/index';
 
 // Colores
 import { ACCENT_COLOR_DARK } from 'components/layout/const';
@@ -27,11 +24,11 @@ const CardWrapper = styled.div`
   }
 `;
 
-const QuizCard: FC<ChildrenProps> = (props: ChildrenProps) => {
+type Props = HTMLAttributes<HTMLDivElement>;
+
+const QuizCard: FC<Props> = (props: Props) => {
   return(
-    <CardWrapper>
-      {props.children}
-    </CardWrapper>
+    <CardWrapper {...props} />
   );
 };
 

@@ -48,7 +48,7 @@ const ProgressBarMeter = styled.span<ProgressSizeMeterProps>`
     return props.progress;
   }}%;
 
-  :after {
+  :before {
     content: "";
     position: absolute;
     top: 0;
@@ -77,8 +77,11 @@ const ProgressBarMeter = styled.span<ProgressSizeMeterProps>`
 
 const ProgressBar: FC<Props> = (props: Props) => {
   return (
-    <ProgressBarBackground>
-      <ProgressBarMeter progress={props.progress}/>
+    <ProgressBarBackground backgroundColor={props.backgroundColor}>
+      <ProgressBarMeter
+        progress={props.progress}
+        meterColor={props.meterColor}
+      />
       {props.children}
     </ProgressBarBackground>
   );

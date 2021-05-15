@@ -5,7 +5,8 @@ export type ChildrenProps = {
 }
 
 export type InputType = {
-  error: boolean;
+  error?: boolean;
+  success?: boolean;
 }
 
 type QuizInputType = {
@@ -16,6 +17,7 @@ type QuizInputType = {
 type QuizPagesType = {
   id: string;
   question: string;
+  shortQuestion: string;
   input: {
     type: string;
     values: QuizInputType[];
@@ -48,4 +50,12 @@ export type RepAnswersType = {
   sub: SubType;
   answers: string[];
   district: string;
+}
+
+export type PartyAnswerType = {
+  id: string;
+  name: string;
+  color: string;
+  logo: string;
+  answers: string[];
 }

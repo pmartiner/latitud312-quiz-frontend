@@ -12,11 +12,11 @@ import BackButton from 'components/Button/BackButton';
 import Loader from 'components/Loader/Loader';
 import RadioButton from 'components/FormElements/RadioButton';
 import TextInput from 'components/FormElements/TextInput';
-import ProgressBar from './ProgressBar/ProgressBar';
+import ProgressBar from 'components/ProgressBar/ProgressBar';
 
 // Tipos
 import { QuizQuestionsType } from 'types/index';
-import { ACCENT_COLOR_LIGHT } from './layout/const';
+import { ACCENT_COLOR_LIGHT, SUCCESS_COLOR } from 'components/layout/const';
 
 const CardQuestion = styled.label`
   font-size: 30px;
@@ -81,7 +81,9 @@ const ParagraphContainer = styled.div`
   width: 100%;
 `;
 
-const CardValues = styled.div``;
+const CardValues = styled.div`
+  margin-top: auto;
+`;
 
 const InputZipCodeContainer = styled.div`
   display: flex;
@@ -102,6 +104,7 @@ const QuizQuestionFooter = styled.footer`
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
+  margin-top: auto;
 
   @media screen and (max-width: 768px) {
     justify-content: center;
@@ -114,6 +117,7 @@ const QuizQuestionHeader = styled.header`
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: auto;
 
   @media screen and (min-width: 769px) {
     justify-content: flex-end;
@@ -136,6 +140,7 @@ const FullSizeFade = styled(Fade)<{ fullSize?: boolean; }>`
   ${props => (isIE || props.fullSize) &&
     `width: 100%;
     height: 100%;`}
+  flex: 1 1 auto;
 `;
 
 const ReadyHeader = styled(IntroCardHeader)`
@@ -143,6 +148,7 @@ const ReadyHeader = styled(IntroCardHeader)`
 `;
 
 const ResHeader = styled.h3`
+  align-self: flex-start;
   font-size: 40px;
   padding-bottom: 20px;
   font-weight: bold;
@@ -184,10 +190,16 @@ const RepresentationLabel = styled.p`
   max-width: 100%;
   font-weight: normal;
   padding-top: 15px;
+  align-self: flex-start;
 
   @media screen and (max-width: 768px) {
     font-size: 24px;
   }
+`;
+
+const RepresentativeAnswer = styled(RepresentationLabel)`
+  font-weight: bold;
+  padding: 10px 0;
 `;
 
 const DiputadeContainer = styled.div`
@@ -239,10 +251,37 @@ const MeterContainer = styled.div`
   padding: 20px 0;
 `;
 
+const RepAnswersHeader = styled(ResHeader)`
+  font-size: 32px;
+  align-self: flex-start;
+
+  @media screen and (max-width: 768px) {
+    font-size: 28px;
+  }
+`;
+
+const AnswersWrapper = styled.div`
+  padding-bottom: 20px;
+  width: 100%;
+`;
+
+const PartyPercentageContainer = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+`;
+
 const Percentage = styled.p`
   font-size: 24px;
-  font-weight: normal;
+  font-weight: bold;
   padding: 10px;
+`;
+
+const SuccessfulRegistrationText = styled.p`
+  color: ${SUCCESS_COLOR};
+  padding: 15px 0;
 `;
 
 const QUIZ: QuizQuestionsType = {
@@ -251,6 +290,7 @@ const QUIZ: QuizQuestionsType = {
       {
         id: '1',
         question: 'Los datos biométricos son datos únicos que están asociados a tus rasgos físicos, como tu huella digital, tu iris, la forma de tu cara, entre otros. ¿Estás de acuerdo con que se tengan que recolectar estos datos para contratar un servicio de telefonía celular?',
+        shortQuestion: 'Almacenamiento de los datos biométricos para el registro contratar un servicio de telefonía celular',
         input: {
           type: 'radio',
           values: [
@@ -272,6 +312,7 @@ const QUIZ: QuizQuestionsType = {
       {
         id: '2',
         question: 'A finales de 2020 el Congreso aprobó la reducción de semanas cotizadas requeridas para la jubilación. ¿Cuál es tu opinión?',
+        shortQuestion: 'Reducción de semanas cotizadas requeridas para la jubilación',
         input: {
           type: 'radio',
           values: [
@@ -293,6 +334,7 @@ const QUIZ: QuizQuestionsType = {
       {
         id: '3',
         question: 'En 2019 el Congreso aprobó la creación de la Guardia Nacional para proporcionar seguridad pública al país. ¿Cuál es tu opinión?',
+        shortQuestion: 'Aprobación de la Guardia Nacional',
         input: {
           type: 'radio',
           values: [
@@ -314,6 +356,7 @@ const QUIZ: QuizQuestionsType = {
       {
         id: '4',
         question: 'Este año entró en vigor la ley que regula y prohibe la subcontratación laboral, también conocida como outsourcing. ¿Qué opinas sobre la aprobación de esta ley?',
+        shortQuestion: 'Ley que regula y prohibe la subcontratación laboral',
         input: {
           type: 'radio',
           values: [
@@ -334,7 +377,8 @@ const QUIZ: QuizQuestionsType = {
       },
       {
         id: '5',
-        question: 'La actual propuesta de ley para lad espenalización de la marihuana prohibe su consumo en vía pública. ¿Qué opinas al respecto?',
+        question: 'La actual propuesta de ley para la despenalización de la marihuana prohibe su consumo en vía pública. ¿Qué opinas al respecto?',
+        shortQuestion: 'Consumo de marihuana en vía pública',
         input: {
           type: 'radio',
           values: [
@@ -356,6 +400,7 @@ const QUIZ: QuizQuestionsType = {
       {
         id: '6',
         question: 'El año pasado el Congreso aprobó un nuevo impuesto para las plataformas digitales. ¿Qué opinas sobre esto?',
+        shortQuestion: 'Impuesto a las plataformas digitales',
         input: {
           type: 'radio',
           values: [
@@ -400,13 +445,54 @@ const RESPUESTAS_REPRESENTANTE = {
   district: '15'
 };
 
+const RESPUESTAS_PARTIDOS = [
+  {
+    id: '7657',
+    name: 'Partido 1',
+    color: '#731717',
+    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
+    answers: ['A favor', 'En contra', 'Abstención', 'A favor', 'En contra', 'No se presentó'],
+  },
+  {
+    id: '908',
+    color: '#FF0000',
+    name: 'Partido 2',
+    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
+    answers: ['A favor', 'A favor', 'A favor', 'A favor', 'En contra', 'A favor'],
+  },
+  {
+    id: '123',
+    name: 'Partido 3',
+    color: '#0037DB',
+    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
+    answers: ['A favor', 'En contra', 'Abstención', 'Abstención', 'En contra', 'A favor'],
+  },
+  {
+    id: '2186435',
+    name: 'Partido 4',
+    color: '#FF6D24',
+    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
+    answers: ['En contra', 'En contra', 'En contra', 'A favor', 'En contra', 'En contra'],
+  },
+  {
+    id: '2454',
+    name: 'Partido 5',
+    color: '#EDE731',
+    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
+    answers: ['Abstención', 'Abstención', 'Abstención', 'A favor', 'A favor', 'A favor'],
+  }
+];
+
 const App: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(-2);
   const [zipCode, setZipCode] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasZipCodeError, setHasZipCodeError] = useState<boolean>(false);
   const [hasSendingError, setHasSendingError] = useState<boolean>(false);
+  const [hasEmailError, setHasEmailError] = useState<boolean>(false);
+  const [hasEmailSubmit, sethasEmailSubmit] = useState<boolean>(false);
   
   useEffect(() => {
     const initUserAnswers: string[] = [];
@@ -416,6 +502,13 @@ const App: FC = () => {
 
     setUserAnswers(initUserAnswers);
   }, []);
+
+  useEffect(() => {
+    document.getElementById('card-container')?.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, [currentPage]);
 
   // Temp
   const later = (delay, value) => {
@@ -464,6 +557,22 @@ const App: FC = () => {
       .catch(err => {
         console.error(err);
         setHasSendingError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const handleEmailSubmit = () => {
+    setLoading(true);
+    later(500, false).promise
+      .then(val => {
+        setHasEmailError(val as boolean);
+        sethasEmailSubmit(true);
+      })
+      .catch(err => {
+        console.error(err);
+        setHasEmailError(true);
       })
       .finally(() => {
         setLoading(false);
@@ -684,6 +793,125 @@ const App: FC = () => {
     );
   };
 
+  const renderRepAnswersCard = () => {
+    const resp = QUIZ.quiz.pages.map((q, i) => (
+      <RepresentativeAnswer key={q.id}>
+        {q.shortQuestion}: {RESPUESTAS_REPRESENTANTE.answers[i]}
+      </RepresentativeAnswer>
+    ));
+
+    return (
+      <FullSizeFade>
+        <CardContentContainer>
+          <RepAnswersHeader>
+            Así fue cómo voto el diputado/a de tu distrito:
+          </RepAnswersHeader>
+          <AnswersWrapper>
+            {resp}
+          </AnswersWrapper>
+          <Button onClick={() => setCurrentPage(currentPage + 1)}>
+            Ver más resultados
+          </Button>
+        </CardContentContainer>
+      </FullSizeFade>
+    );
+  };
+  
+  const renderPartyAnswers = () => {
+    const resp = RESPUESTAS_PARTIDOS.map((r) => {
+      let percentageResult = 0;
+
+      for (let i = 0; i < userAnswers.length; i += 1) {
+        if (userAnswers[i] === r.answers[i]) {
+          percentageResult += 1;
+        }
+      }
+  
+      if (userAnswers.length > 0) {
+        percentageResult = Math.round((percentageResult / userAnswers.length) * 100);
+      }
+
+      return (
+        <PartyPercentageContainer key={r.id}>
+          <PartyPhoto
+            src={r.logo}
+            alt={`Partido ${r.name}`}
+          />
+          <MeterContainer>
+            <ProgressBar
+              progress={percentageResult}
+              meterColor={r.color}
+              backgroundColor='transparent'
+            >
+              <Percentage>
+                {percentageResult}%
+              </Percentage>
+            </ProgressBar>
+          </MeterContainer>
+        </PartyPercentageContainer>
+      );
+    });
+
+    return (
+      <FullSizeFade>
+        <CardContentContainer>
+          <RepAnswersHeader>
+            Con base en tus respuestas, así te representan la mayoría de las bancadas de los partidos:
+          </RepAnswersHeader>
+          <AnswersWrapper>
+            {resp}
+          </AnswersWrapper>
+          <Button onClick={() => setCurrentPage(currentPage + 1)}>
+            ¡Listo!
+          </Button>
+        </CardContentContainer>
+      </FullSizeFade>
+    );
+  };
+
+  const renderRegisterEmailCard = () => {
+    return (
+      <FullSizeFade>
+        <CardZipCodeContentContainer onSubmit={handleEmailSubmit}>
+          <ParagraphContainer>
+            <IntroCardHeader>
+              ¡Gracias por participar!
+            </IntroCardHeader>
+            <IntroCardHeader>
+              Juntos y juntas podemos construir una democracia más saludable.
+            </IntroCardHeader>
+            <IntroCardHeader>
+              Si estás interesado/a en recibir más noticias e información para entender la política, ¡regístrate aquí! 👇
+            </IntroCardHeader>
+          </ParagraphContainer>
+          <InputZipCodeContainer>
+            <label htmlFor='correo-electronico'>Correo electrónico:</label>
+            <TextInput
+              id='correo-electronico'
+              type='email'
+              onChange={(e) => setEmail(e.target.value)}
+              error={hasEmailError}
+              success={hasEmailSubmit}
+              placeholder='Escribe aquí tu correo electrónico: '
+              required
+            />
+          </InputZipCodeContainer>
+          {hasEmailSubmit &&
+          <SuccessfulRegistrationText>
+            ¡Registro exitoso!
+          </SuccessfulRegistrationText>}
+          {!hasEmailSubmit &&
+          <Button
+            type='submit'
+            disabled={hasEmailError || email === ''}
+          >
+            ¡Regístrame!
+          </Button>}
+        </CardZipCodeContentContainer>
+      </FullSizeFade>
+    );
+  };
+
   const renderContent = () => {
     if (currentPage === -2) {
       return renderIntroCard();
@@ -695,6 +923,12 @@ const App: FC = () => {
       return renderReadyCard();
     } else if (currentPage === QUIZ.quiz.pages.length + 1) {
       return renderRepResultsCard();
+    } else if (currentPage === QUIZ.quiz.pages.length + 2) {
+      return renderRepAnswersCard();
+    } else if (currentPage === QUIZ.quiz.pages.length + 3) {
+      return renderPartyAnswers();
+    } else if (currentPage === QUIZ.quiz.pages.length + 4) {
+      return renderRegisterEmailCard();
     }
 
     return <></>;
@@ -702,7 +936,7 @@ const App: FC = () => {
 
   return (
     <Page>
-      <QuizCard>
+      <QuizCard id='card-container'>
         {loading ?
           <LoaderContainer>
             <Loader />
