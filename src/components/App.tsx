@@ -771,7 +771,7 @@ const App: FC = () => {
                 />
               </DiputadeSubHeader>
               <DiputadeSubHeader>
-                Este diputado/a <em>{RESPUESTAS_REPRESENTANTE.reelection === true ? 'Sí' : 'No'}</em> reelección.
+                Este diputado/a <strong>{RESPUESTAS_REPRESENTANTE.reelection === true ? 'sí' : 'no'}</strong> busca reelección.
               </DiputadeSubHeader>
             </DiputadeTextContainer>
           </DiputadeContainer>
