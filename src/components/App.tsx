@@ -442,7 +442,8 @@ const RESPUESTAS_REPRESENTANTE = {
     fullName: 'Representante suplente de prueba',
   },
   answers: ['A favor', 'En contra', 'Abstención', 'A favor', 'En contra', 'No se presentó'],
-  district: '15'
+  district: '15',
+  reelection: true
 };
 
 const RESPUESTAS_PARTIDOS = [
@@ -597,10 +598,10 @@ const App: FC = () => {
               ¿Sabías que éstas son las primeras elecciones en las que tu diputado/a puede reelegirse?
             </IntroCardHeader>
             <IntroCardHeader>
-              Descubre si tu diputado/a te ha evaluado bien o si necesitas buscar una alternativa. 
+              Descubre si tu diputado/a te ha representado bien o si necesitas buscar una alternativa. 
             </IntroCardHeader>
             <IntroCardHeader>
-              Contesta estas 5 preguntas para descubrirla respuesta.  
+              Contesta estas 5 preguntas para descubrir la respuesta.  
             </IntroCardHeader>
           </ParagraphContainer>
           <Button onClick={() => setCurrentPage(currentPage + 1)}>
@@ -769,10 +770,13 @@ const App: FC = () => {
                   alt={`Partido ${RESPUESTAS_REPRESENTANTE.previousParty.name}`}
                 />
               </DiputadeSubHeader>
+              <DiputadeSubHeader>
+                Este diputado/a <em>{RESPUESTAS_REPRESENTANTE.reelection === true ? 'Sí' : 'No'}</em> reelección.
+              </DiputadeSubHeader>
             </DiputadeTextContainer>
           </DiputadeContainer>
           <RepresentationLabel>
-            De acuerdo con tus respuestas, el diputado/a de tu distrito te representa:
+            De acuerdo con tus respuestas, el diputado/a de tu distrito te representa en este porcentaje:
           </RepresentationLabel>
           <MeterContainer>
             <ProgressBar
