@@ -8,6 +8,7 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import Dotenv from 'dotenv-webpack';
 
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
@@ -60,6 +61,7 @@ const webpackConfig = (env: EnvVars): Configuration => {
       plugins: [new TsconfigPathsPlugin()],
       alias: {
         'src': path.resolve(__dirname, 'src/'),
+        'api': path.resolve(__dirname, 'src/api'),
         'components': path.resolve(__dirname, 'src/components/'),
         'types': path.resolve(__dirname, 'src/types/'),
       }
@@ -135,11 +137,15 @@ const webpackConfig = (env: EnvVars): Configuration => {
           'process.env.NAME': JSON.stringify(require('./package.json').name),
           'process.env.VERSION': JSON.stringify(require('./package.json').version)
         }),
+        new webpack.ProvidePlugin({
+          process: 'process/browser',
+        }),
         new ForkTsCheckerWebpackPlugin({
           eslint: {
             files: './src/**/*.{ts,tsx,js,jsx}' // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
           }
         }),
+        new Dotenv(),
         () => env.development && new ReactRefreshPlugin({
           overlay: {
             sockIntegration: 'wds',

@@ -38,7 +38,10 @@
         ],
         "components/*": [
           "src/components/*"
-        ]
+        ],
+        "api/*": [
+          "src/api/*"
+        ],
       }
     },
     "include": [

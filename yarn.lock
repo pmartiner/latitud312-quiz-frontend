@@ -1784,6 +1784,13 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
+axios@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
+  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
+  dependencies:
+    follow-redirects "^1.10.0"
+
 babel-loader@^8.2.2:
   version "8.2.2"
   resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-8.2.2.tgz#9363ce84c10c9a40e6c753748e1441b60c8a0b81"
@@ -2561,6 +2568,25 @@ dot-case@^3.0.4:
     no-case "^3.0.4"
     tslib "^2.0.3"
 
+dotenv-defaults@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/dotenv-defaults/-/dotenv-defaults-2.0.1.tgz#ea6f9632b3b5cc55e48b736760def5561f1cb7c0"
+  integrity sha512-ugFCyBF7ILuwpmznduHPQZBMucHHJ8T4OBManTEVjemxCm2+nqifSuW2lD2SNKdiKSH1E324kZSdJ8M04b4I/A==
+  dependencies:
+    dotenv "^8.2.0"
+
+dotenv-webpack@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/dotenv-webpack/-/dotenv-webpack-7.0.2.tgz#1bf2e407e92c10fbb08d815b12c991028f10f81c"
+  integrity sha512-RY+/5uM/XY4bGtih9f9ic8hlrUDxVcZZBPWlnX/aHhaKxcVVX9SH/5VH7CSmvVo9GL6PKvQOA0X1bc552rnatQ==
+  dependencies:
+    dotenv-defaults "^2.0.1"
+
+dotenv@^8.2.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.6.0.tgz#061af664d19f7f4d8fc6e4ff9b584ce237adcb8b"
+  integrity sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==
+
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
@@ -3178,6 +3204,11 @@ follow-redirects@^1.0.0:
   version "1.13.3"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.13.3.tgz#e5598ad50174c1bc4e872301e82ac2cd97f90267"
   integrity sha512-DUgl6+HDzB0iEptNQEXLx/KhTmDb8tZUHSeLqpnjpknR70H0nC2t9N73BK6fN4hOvJ84pKlIQVQ4k5FFlBedKA==
+
+follow-redirects@^1.10.0:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
+  integrity sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
 
 for-in@^1.0.2:
   version "1.0.2"
@@ -4903,6 +4934,11 @@ process-nextick-args@~2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
   integrity sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==
+
+process@^0.11.10:
+  version "0.11.10"
+  resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
+  integrity sha1-czIwDoQBYb2j5podHZGn1LwW8YI=
 
 progress@^2.0.0:
   version "2.0.3"

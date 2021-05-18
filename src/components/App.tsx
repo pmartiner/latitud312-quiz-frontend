@@ -14,9 +14,13 @@ import RadioButton from 'components/FormElements/RadioButton';
 import TextInput from 'components/FormElements/TextInput';
 import ProgressBar from 'components/ProgressBar/ProgressBar';
 
+// API
+import { getDistritoByCP } from 'api/distritos';
+
 // Tipos
 import { QuizQuestionsType } from 'types/index';
-import { ACCENT_COLOR_LIGHT, SUCCESS_COLOR } from 'components/layout/const';
+import { ACCENT_COLOR_LIGHT, ERROR_COLOR, SUCCESS_COLOR } from 'components/layout/const';
+import { AxiosError } from 'axios';
 
 const CardQuestion = styled.label`
   font-size: 30px;
@@ -284,6 +288,11 @@ const SuccessfulRegistrationText = styled.p`
   padding: 15px 0;
 `;
 
+const ErrorText = styled.p`
+  color: ${ERROR_COLOR};
+  padding: 15px 0;
+`;
+
 const QUIZ: QuizQuestionsType = {
   quiz: {
     pages: [
@@ -488,9 +497,11 @@ const App: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(-2);
   const [zipCode, setZipCode] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [distrito, setDistrito] = useState<number>(0);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasZipCodeError, setHasZipCodeError] = useState<boolean>(false);
+  const [zipCodeError, setZipCodeError] = useState<string>('');
   const [hasSendingError, setHasSendingError] = useState<boolean>(false);
   const [hasEmailError, setHasEmailError] = useState<boolean>(false);
   const [hasEmailSubmit, sethasEmailSubmit] = useState<boolean>(false);
@@ -510,6 +521,12 @@ const App: FC = () => {
       behavior: 'smooth'
     });
   }, [currentPage]);
+
+  useEffect(() => {
+    if (distrito !== -1) {
+      console.log(distrito);
+    }
+  }, [distrito]);
 
   // Temp
   const later = (delay, value) => {
@@ -531,16 +548,32 @@ const App: FC = () => {
     };
   };
 
+  const handleZipCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (hasZipCodeError) {
+      setHasZipCodeError(false);
+    }
+    setZipCode(e.target.value);
+  };
+
   const handleZipCodeSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    later(500, false).promise
-      .then(val => {
-        setHasZipCodeError(val as boolean);
+    getDistritoByCP({
+      cp: zipCode
+    })
+      .then(response => {
+        setHasZipCodeError(false);
+        if (response.data.data.length > 1) {
+          setDistrito(response.data.data[1].distrito);
+        } else if (response.data.data.length === 1) {
+          setDistrito(response.data.data[0].distrito);
+        }
+
         setCurrentPage(currentPage + 1);
       })
-      .catch(err => {
-        console.error(err);
+      .catch((err: AxiosError) => {
+        console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
+        setZipCodeError(`${err.response?.data.description}`);
         setHasZipCodeError(true);
       })
       .finally(() => {
@@ -629,12 +662,16 @@ const App: FC = () => {
             <TextInput
               id='codigo-postal'
               maxLength={5}
-              onChange={(e) => setZipCode(e.target.value)}
+              onChange={handleZipCodeChange}
               error={hasZipCodeError}
               placeholder='Escribe aquí tu código postal: '
               required
             />
           </InputZipCodeContainer>
+          {hasZipCodeError &&
+          <ErrorText>
+            {zipCodeError}
+          </ErrorText>}
           <Button
             type='submit'
             disabled={hasZipCodeError || zipCode === ''}
