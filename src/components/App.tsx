@@ -210,13 +210,17 @@ const DiputadeSubHeader = styled.h5`
   align-items: center;
 
   & span {
-    align-self: flex-start;
+    align-self: center;
   }
 
   @media screen and (max-width: 768px) {
     font-size: 24px;
     flex-flow: column wrap;
     justify-content: center;
+
+    & span {
+      align-self: flex-start;
+    }
   }
 `;
 
@@ -279,9 +283,16 @@ const DiputadePhotoContainer = styled.div`
 `;
 
 const PartyPhoto = styled.img`
-  max-width: 50px;
-  max-height: 50px;
+  max-width: 72px;
+  max-height: 72px;
   padding: 10px;
+
+  @media screen and (max-width: 768px) {
+    max-width: 90px;
+    max-height: 90px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
 const MeterContainer = styled.div`
