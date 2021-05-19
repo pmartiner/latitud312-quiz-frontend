@@ -45,7 +45,7 @@
       }
     },
     "include": [
-      "./src",
+      "./src/*",
       "webpack.config.ts",
       "src/**/*.ts",
       "src/**/*.tsx",

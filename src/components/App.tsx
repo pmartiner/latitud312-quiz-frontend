@@ -3,6 +3,8 @@ import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Fade } from 'react-awesome-reveal';
 import { isIE } from 'react-device-detect';
+import ReactModal from 'react-modal';
+import ImageZoom from 'react-medium-image-zoom';
 
 // Componentes
 import Page from 'components/layout/Page';
@@ -15,14 +17,28 @@ import TextInput from 'components/FormElements/TextInput';
 import ProgressBar from 'components/ProgressBar/ProgressBar';
 
 // API
-import { getDistritoByCP } from 'api/distritos';
+import { getDiputade } from 'api/distritos';
 
 // Tipos
 import { QuizQuestionsType } from 'types/index';
-import { ACCENT_COLOR_LIGHT, ERROR_COLOR, SUCCESS_COLOR } from 'components/layout/const';
+import {
+  ACCENT_COLOR,
+  ACCENT_COLOR_DARK,
+  ACCENT_COLOR_LIGHT,
+  ERROR_COLOR,
+  SUCCESS_COLOR
+} from 'components/layout/const';
 import { AxiosError } from 'axios';
+import { GetDiputadeResponse } from 'types/api';
+import SelectComponent from './Select/Select';
 
-const CardQuestion = styled.label`
+// Constantes
+import { ENTIDADES, PARTIDOS } from '../const';
+
+// Assets
+import INE_Seccion from 'src/assets/images/partidos/INE_Seccion.jpg';
+
+const CardQuestion = styled.legend`
   font-size: 30px;
   padding-bottom: 20px;
 
@@ -128,6 +144,13 @@ const QuizQuestionHeader = styled.header`
   }
 `;
 
+const Label = styled.label`
+  font-size: 12px;
+  font-weight: bold;
+  color: ${ACCENT_COLOR_DARK};
+  padding-bottom: 5px;
+`;
+
 const DesktopBackButton = styled(BackButton)`
   @media screen and (max-width: 768px) {
      display: none;
@@ -182,9 +205,18 @@ const DiputadeSubHeader = styled.h5`
   max-width: 100%;
   font-weight: normal;
   padding: 10px 0;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+
+  & span {
+    align-self: flex-start;
+  }
 
   @media screen and (max-width: 768px) {
     font-size: 24px;
+    flex-flow: column wrap;
+    justify-content: center;
   }
 `;
 
@@ -234,6 +266,7 @@ const DiputadeTextContainer = styled.div`
 const DiputadePhoto = styled.img`
   max-width: 200px;
   max-height: 200px;
+  border-radius: 25px;
 
   @media screen and (max-width: 768px) {
     max-width: 120px;
@@ -241,9 +274,14 @@ const DiputadePhoto = styled.img`
   }
 `;
 
+const DiputadePhotoContainer = styled.div`
+  padding: 5px 50px;
+`;
+
 const PartyPhoto = styled.img`
   max-width: 50px;
   max-height: 50px;
+  padding: 10px;
 `;
 
 const MeterContainer = styled.div`
@@ -291,6 +329,40 @@ const SuccessfulRegistrationText = styled.p`
 const ErrorText = styled.p`
   color: ${ERROR_COLOR};
   padding: 15px 0;
+`;
+
+const UnderlinedSpan = styled.span`
+  text-decoration: solid underline ${ACCENT_COLOR_LIGHT} 6px;
+`;
+
+const INEContainer = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  color: ${ACCENT_COLOR_DARK};
+`;
+
+const EmptyUnderlinedButton = styled.button`
+  border: 0;
+  padding: 0 10px;
+  background-color: transparent;
+  display: inline-block;
+  font-size: 48px;
+  font-weight: bold;
+  max-width: 100%;
+  text-decoration: solid underline ${ACCENT_COLOR_LIGHT} 8px;
+  color: ${ACCENT_COLOR_DARK};
+  cursor: pointer;
+  transition: all 0.1s ease;
+
+  :hover {
+    text-decoration: solid underline ${ACCENT_COLOR} 8px;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 24px;
+  }
 `;
 
 const QUIZ: QuizQuestionsType = {
@@ -495,16 +567,18 @@ const RESPUESTAS_PARTIDOS = [
 
 const App: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(-2);
-  const [zipCode, setZipCode] = useState<string>('');
+  const [seccion, setSeccion] = useState<string>('');
+  const [entidad, setEntidad] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [distrito, setDistrito] = useState<number>(0);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [hasZipCodeError, setHasZipCodeError] = useState<boolean>(false);
-  const [zipCodeError, setZipCodeError] = useState<string>('');
+  const [hasSeccionError, setHasSeccionError] = useState<boolean>(false);
+  const [seccionError, setSeccionError] = useState<string>('');
   const [hasSendingError, setHasSendingError] = useState<boolean>(false);
   const [hasEmailError, setHasEmailError] = useState<boolean>(false);
   const [hasEmailSubmit, sethasEmailSubmit] = useState<boolean>(false);
+  const [diputade, setDiputade] = useState<GetDiputadeResponse | undefined>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   
   useEffect(() => {
     const initUserAnswers: string[] = [];
@@ -513,6 +587,7 @@ const App: FC = () => {
     }
 
     setUserAnswers(initUserAnswers);
+    ReactModal.setAppElement(document.getElementById('root-latitud312') as HTMLElement);
   }, []);
 
   useEffect(() => {
@@ -521,12 +596,6 @@ const App: FC = () => {
       behavior: 'smooth'
     });
   }, [currentPage]);
-
-  useEffect(() => {
-    if (distrito !== -1) {
-      console.log(distrito);
-    }
-  }, [distrito]);
 
   // Temp
   const later = (delay, value) => {
@@ -548,33 +617,29 @@ const App: FC = () => {
     };
   };
 
-  const handleZipCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (hasZipCodeError) {
-      setHasZipCodeError(false);
+  const handleSeccionChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (hasSeccionError) {
+      setHasSeccionError(false);
     }
-    setZipCode(e.target.value);
+    setSeccion(e.target.value);
   };
 
   const handleZipCodeSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    getDistritoByCP({
-      cp: zipCode
+    getDiputade({
+      seccion,
+      entidad
     })
       .then(response => {
-        setHasZipCodeError(false);
-        if (response.data.data.length > 1) {
-          setDistrito(response.data.data[1].distrito);
-        } else if (response.data.data.length === 1) {
-          setDistrito(response.data.data[0].distrito);
-        }
-
+        setHasSeccionError(false);
+        setDiputade(response.data);
         setCurrentPage(currentPage + 1);
       })
       .catch((err: AxiosError) => {
         console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
-        setZipCodeError(`${err.response?.data.description}`);
-        setHasZipCodeError(true);
+        setSeccionError(`${err.response?.data.description}`);
+        setHasSeccionError(true);
       })
       .finally(() => {
         setLoading(false);
@@ -651,30 +716,47 @@ const App: FC = () => {
         <CardZipCodeContentContainer onSubmit={handleZipCodeSubmit}>
           <ParagraphContainer>
             <IntroCardHeader>
-              Para poder comenzar, te pedimos escribas tu código postal.
+              Para poder comenzar, te pedimos escribas tu sección electoral, que encontrarás en tu INE, y tu estado.
             </IntroCardHeader>
             <IntroCardHeader>
-              Únicamente utilizaremos este dato para determinar a los y las representantes de tu distrito.
+              Únicamente utilizaremos estos datos para determinar a los y las representantes de tu distrito.
+            </IntroCardHeader>
+            <IntroCardHeader>
+              Haz clic
+              <EmptyUnderlinedButton
+                type='button'
+                onClick={() => setIsModalOpen(true)}
+              >
+                aquí
+              </EmptyUnderlinedButton>
+              si tienes dudas sobre dónde encontrar tu sección electoral.
             </IntroCardHeader>
           </ParagraphContainer>
+          <SelectComponent
+            id='entidades'
+            label='Estado:'
+            options={ENTIDADES}
+            placeholder={'Elija el estado en donde reside, por favor.'}
+            onChange={(e) => setEntidad(e.target.value)}
+          />
           <InputZipCodeContainer>
-            <label htmlFor='codigo-postal'>Código postal:</label>
+            <Label htmlFor='seccion-electoral'>Sección electoral:</Label>
             <TextInput
-              id='codigo-postal'
-              maxLength={5}
-              onChange={handleZipCodeChange}
-              error={hasZipCodeError}
-              placeholder='Escribe aquí tu código postal: '
+              id='seccion-electoral'
+              maxLength={4}
+              onChange={handleSeccionChange}
+              error={hasSeccionError}
+              placeholder='Escribe aquí tu sección electoral: '
               required
             />
           </InputZipCodeContainer>
-          {hasZipCodeError &&
+          {hasSeccionError &&
           <ErrorText>
-            {zipCodeError}
+            {seccionError}
           </ErrorText>}
           <Button
             type='submit'
-            disabled={hasZipCodeError || zipCode === ''}
+            disabled={hasSeccionError || (seccion === '' && entidad === '')}
           >
             Continuar
           </Button>
@@ -717,12 +799,14 @@ const App: FC = () => {
               {currentPage + 1} de {QUIZ.quiz.pages.length}
             </p>
           </QuizQuestionHeader>
-          <CardQuestion>
-            {QUIZ.quiz.pages[currentPage].question}
-          </CardQuestion>
-          <CardValues>
-            {cardValues}
-          </CardValues>
+          <fieldset>
+            <CardQuestion>
+              {QUIZ.quiz.pages[currentPage].question}
+            </CardQuestion>
+            <CardValues>
+              {cardValues}
+            </CardValues>
+          </fieldset>
           <QuizQuestionFooter>
             <DesktopBackButton onClick={() => setCurrentPage(currentPage - 1)}>
               Atrás
@@ -767,6 +851,12 @@ const App: FC = () => {
     );
   };
 
+  const isUrl = (str: string): boolean => {
+    const regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+
+    return regexp.test(str);
+  };
+
   const renderRepResultsCard = () => {
     let percentageResult = 0;
 
@@ -780,6 +870,12 @@ const App: FC = () => {
       percentageResult = Math.round((percentageResult / userAnswers.length) * 100);
     }
 
+    const partidoActualDiputade = PARTIDOS.find(p => p.name === diputade?.bancada_actual)
+      || PARTIDOS.find(p => p.name === 'SP');
+
+    const partidoAnteriorDiputade = PARTIDOS.find(p => p.name === diputade?.bancada_original)
+      || PARTIDOS.find(p => p.name === 'SP');
+
     return (
       <FullSizeFade>
         <CardContentContainer>
@@ -787,28 +883,38 @@ const App: FC = () => {
             Diputado/a federal de tu distrito:
           </ResHeader>
           <DiputadeContainer>
-            <DiputadePhoto src={RESPUESTAS_REPRESENTANTE.photo} alt='Foto del representante de tu distrito'/>
+            <DiputadePhotoContainer>
+              <DiputadePhoto
+                alt='Foto del representante de tu distrito'
+                src={diputade?.foto && isUrl(diputade.foto) ? diputade.foto : RESPUESTAS_REPRESENTANTE.photo} 
+              />
+            </DiputadePhotoContainer>
             <DiputadeTextContainer>
               <DiputadeHeader>
-                {RESPUESTAS_REPRESENTANTE.fullName}
+                <span>{diputade?.nombre_diputade || ''}</span>
               </DiputadeHeader>
               <DiputadeSubHeader>
-                Suplente: {RESPUESTAS_REPRESENTANTE.sub.fullName}
+                <span>Suplente: {diputade?.nombre_suplente || ''}</span>
               </DiputadeSubHeader>
               <DiputadeSubHeader>
-                Bancada actual: <PartyPhoto
-                  src={RESPUESTAS_REPRESENTANTE.currentParty.logo}
-                  alt={`Partido ${RESPUESTAS_REPRESENTANTE.currentParty.name}`}
+                <span>Bancada actual:</span>
+                <PartyPhoto
+                  src={partidoActualDiputade?.photo || ''}
+                  alt={partidoActualDiputade?.longName || 'Foto del partido de la bancada actual'}
                 />
               </DiputadeSubHeader>
               <DiputadeSubHeader>
-                Partido por el que fue electo: <PartyPhoto
-                  src={RESPUESTAS_REPRESENTANTE.previousParty.logo}
-                  alt={`Partido ${RESPUESTAS_REPRESENTANTE.previousParty.name}`}
+                <span>Partido por el que fue electo:</span>
+                <PartyPhoto
+                  src={partidoAnteriorDiputade?.photo || ''}
+                  alt={partidoAnteriorDiputade?.longName || 'Foto del partido de la bancada anterior'}
                 />
               </DiputadeSubHeader>
               <DiputadeSubHeader>
-                Este diputado/a <strong>{RESPUESTAS_REPRESENTANTE.reelection === true ? 'sí' : 'no'}</strong> busca reelección.
+                <span>Este diputado/a <strong>{diputade?.reeleccion ? 'sí' : 'no'}</strong> busca reelección y <strong>{diputade?.licencia || diputade?.licencia_deceso ? 'sí' : 'no'}</strong> solicitó licencia</span>
+              </DiputadeSubHeader>
+              <DiputadeSubHeader>
+                <span>El/la suplente del diputado/a <strong>{diputade?.reeleccion_suplente ? 'sí' : 'no'}</strong> busca reelección.</span>
               </DiputadeSubHeader>
             </DiputadeTextContainer>
           </DiputadeContainer>
@@ -837,7 +943,7 @@ const App: FC = () => {
   const renderRepAnswersCard = () => {
     const resp = QUIZ.quiz.pages.map((q, i) => (
       <RepresentativeAnswer key={q.id}>
-        {q.shortQuestion}: {RESPUESTAS_REPRESENTANTE.answers[i]}
+        {q.shortQuestion}: <UnderlinedSpan>{RESPUESTAS_REPRESENTANTE.answers[i]}</UnderlinedSpan>
       </RepresentativeAnswer>
     ));
 
@@ -977,6 +1083,52 @@ const App: FC = () => {
 
   return (
     <Page>
+      <ReactModal
+        isOpen={isModalOpen}
+        contentLabel='¿Dónde encuentro mi sección electoral?'
+        onRequestClose={() => setIsModalOpen(false)}
+        shouldCloseOnOverlayClick={true}
+        aria={{
+          labelledby: 'heading',
+          describedby: 'ine-img'
+        }}
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.75)'
+          },
+          content: {
+            borderRadius: '10px',
+            maxWidth: '600px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            maxHeight: '550px'
+          }
+        }}
+      >
+        <INEContainer>
+          <h2 id='heading'>¿Dónde encuentro mi sección electoral?</h2>
+          <p>¡Da clic para ver la imagen más cerca!</p>
+          <ImageZoom
+            image={{
+              id: 'ine-img',
+              src: INE_Seccion,
+              alt: 'En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral',
+              style: {
+                maxWidth: '100%',
+                borderRadius: '25px',
+                padding: '20px'
+              }
+            }}
+            zoomImage={{
+              src: INE_Seccion,
+              alt: 'En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral',
+            }}
+          />
+          <Button onClick={() => setIsModalOpen(false)}>
+            Cerrar
+          </Button>
+        </INEContainer>
+      </ReactModal>
       <QuizCard id='card-container'>
         {loading ?
           <LoaderContainer>

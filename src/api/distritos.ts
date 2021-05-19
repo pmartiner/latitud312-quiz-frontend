@@ -2,12 +2,12 @@
 import axios, { AxiosResponse } from 'axios';
 
 // Types
-import { GetDistritoByCPBody, GetDistritoByCPResponse } from 'types/api';
+import { GetDiputadeRequest, GetDiputadeResponse } from 'types/api';
 
 // Constantes
 // eslint-disable-next-line no-undef
 const API_URL = process.env.API_URL;
 
-export const getDistritoByCP = (data: GetDistritoByCPBody): Promise<AxiosResponse<GetDistritoByCPResponse>> => {
-  return axios.post(`${API_URL}/distritos/get-distrito`, data);
+export const getDiputade = (data: GetDiputadeRequest): Promise<AxiosResponse<GetDiputadeResponse>> => {
+  return axios.post(`${API_URL}/distritos/get-diputade`, data);
 };

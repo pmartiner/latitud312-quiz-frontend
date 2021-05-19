@@ -9,6 +9,11 @@ export type InputType = {
   success?: boolean;
 }
 
+export type OptionType = {
+  id: string | number;
+  name: string;
+}
+
 type QuizInputType = {
   label: string;
   value: string;
