@@ -332,7 +332,7 @@ const ErrorText = styled.p`
 `;
 
 const UnderlinedSpan = styled.span`
-  text-decoration: solid underline ${ACCENT_COLOR_LIGHT} 6px;
+  border-bottom: 6px solid ${ACCENT_COLOR_LIGHT};
 `;
 
 const INEContainer = styled.div`
@@ -351,13 +351,13 @@ const EmptyUnderlinedButton = styled.button`
   font-size: 48px;
   font-weight: bold;
   max-width: 100%;
-  text-decoration: solid underline ${ACCENT_COLOR_LIGHT} 8px;
+  border-bottom: 8px solid ${ACCENT_COLOR_LIGHT};
   color: ${ACCENT_COLOR_DARK};
   cursor: pointer;
   transition: all 0.1s ease;
 
   :hover {
-    text-decoration: solid underline ${ACCENT_COLOR} 8px;
+    border-bottom: 8px solid ${ACCENT_COLOR};
   }
 
   @media screen and (max-width: 768px) {
