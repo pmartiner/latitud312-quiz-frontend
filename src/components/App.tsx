@@ -464,7 +464,6 @@ const App: FC = () => {
   // Effects handlers
   useEffect(() => {
     ReactModal.setAppElement(document.getElementById('root-latitud312') as HTMLElement);
-    console.log('answers', RESPUESTAS_REPRESENTANTE.answers);
   }, []);
   
   useEffect(() => {
@@ -778,13 +777,10 @@ const App: FC = () => {
     let percentageResult = 0;
 
     for (let i = 0; i < userAnswers.length; i += 1) {
-      console.log((userAnswers[i] as PreguntaType).respuesta, RESPUESTAS_REPRESENTANTE.answers[i]);
       if ((userAnswers[i] as PreguntaType).respuesta === RESPUESTAS_REPRESENTANTE.answers[i]) {
         percentageResult += 1;
       }
     }
-
-    console.log(percentageResult);
 
     if (userAnswers.length > 0) {
       percentageResult = Math.round((percentageResult / userAnswers.length) * 100);
