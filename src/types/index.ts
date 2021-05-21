@@ -14,27 +14,6 @@ export type OptionType = {
   name: string;
 }
 
-type QuizInputType = {
-  label: string;
-  value: string;
-};
-
-type QuizPagesType = {
-  id: string;
-  question: string;
-  shortQuestion: string;
-  input: {
-    type: string;
-    values: QuizInputType[];
-  };
-}
-
-export type QuizQuestionsType = {
-  quiz: {
-    pages: QuizPagesType[];
-  };
-}
-
 type PartyType = {
   id: string;
   name: string;

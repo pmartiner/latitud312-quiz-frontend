@@ -18,9 +18,17 @@ import ProgressBar from 'components/ProgressBar/ProgressBar';
 
 // API
 import { getDiputade } from 'api/distritos';
+import { getPreguntas } from 'api/preguntas';
+import { setRespuesta } from 'api/respuestas';
+import { setCorreo } from 'api/correos';
 
 // Tipos
-import { QuizQuestionsType } from 'types/index';
+import { AxiosError } from 'axios';
+import { GetDiputadeResponse, PreguntaType, QuizQuestionsType, SetPreguntaRequest } from 'types/api';
+import SelectComponent from 'components/Select/Select';
+
+// Constantes
+import { ENTIDADES, PARTIDOS } from '../const';
 import {
   ACCENT_COLOR,
   ACCENT_COLOR_DARK,
@@ -28,15 +36,10 @@ import {
   ERROR_COLOR,
   SUCCESS_COLOR
 } from 'components/layout/const';
-import { AxiosError } from 'axios';
-import { GetDiputadeResponse } from 'types/api';
-import SelectComponent from './Select/Select';
-
-// Constantes
-import { ENTIDADES, PARTIDOS } from '../const';
 
 // Assets
 import INE_Seccion from 'src/assets/images/partidos/INE_Seccion.jpg';
+import NoPhoto from 'src/assets/images/no-photo.png';
 
 const CardQuestion = styled.legend`
   font-size: 30px;
@@ -376,166 +379,27 @@ const EmptyUnderlinedButton = styled.button`
   }
 `;
 
-const QUIZ: QuizQuestionsType = {
-  quiz: {
-    pages: [
-      {
-        id: '1',
-        question: 'Los datos biométricos son datos únicos que están asociados a tus rasgos físicos, como tu huella digital, tu iris, la forma de tu cara, entre otros. ¿Estás de acuerdo con que se tengan que recolectar estos datos para contratar un servicio de telefonía celular?',
-        shortQuestion: 'Almacenamiento de los datos biométricos para el registro contratar un servicio de telefonía celular',
-        input: {
-          type: 'radio',
-          values: [
-            {
-              label: 'A favor ✅',
-              value: 'A favor'
-            },
-            {
-              label: 'Indeciso/a 🤔',
-              value: 'Indecisión'
-            },
-            {
-              label: 'En contra ❌',
-              value: 'En contra'
-            }
-          ]
-        },
-      },
-      {
-        id: '2',
-        question: 'A finales de 2020 el Congreso aprobó la reducción de semanas cotizadas requeridas para la jubilación. ¿Cuál es tu opinión?',
-        shortQuestion: 'Reducción de semanas cotizadas requeridas para la jubilación',
-        input: {
-          type: 'radio',
-          values: [
-            {
-              label: 'A favor ✅',
-              value: 'A favor'
-            },
-            {
-              label: 'Indeciso/a 🤔',
-              value: 'Indecisión'
-            },
-            {
-              label: 'En contra ❌',
-              value: 'En contra'
-            }
-          ]
-        },
-      },
-      {
-        id: '3',
-        question: 'En 2019 el Congreso aprobó la creación de la Guardia Nacional para proporcionar seguridad pública al país. ¿Cuál es tu opinión?',
-        shortQuestion: 'Aprobación de la Guardia Nacional',
-        input: {
-          type: 'radio',
-          values: [
-            {
-              label: 'A favor ✅',
-              value: 'A favor'
-            },
-            {
-              label: 'Indeciso/a 🤔',
-              value: 'Indecisión'
-            },
-            {
-              label: 'En contra ❌',
-              value: 'En contra'
-            }
-          ]
-        },
-      },
-      {
-        id: '4',
-        question: 'Este año entró en vigor la ley que regula y prohibe la subcontratación laboral, también conocida como outsourcing. ¿Qué opinas sobre la aprobación de esta ley?',
-        shortQuestion: 'Ley que regula y prohibe la subcontratación laboral',
-        input: {
-          type: 'radio',
-          values: [
-            {
-              label: 'A favor ✅',
-              value: 'A favor'
-            },
-            {
-              label: 'Indeciso/a 🤔',
-              value: 'Indecisión'
-            },
-            {
-              label: 'En contra ❌',
-              value: 'En contra'
-            }
-          ]
-        },
-      },
-      {
-        id: '5',
-        question: 'La actual propuesta de ley para la despenalización de la marihuana prohibe su consumo en vía pública. ¿Qué opinas al respecto?',
-        shortQuestion: 'Consumo de marihuana en vía pública',
-        input: {
-          type: 'radio',
-          values: [
-            {
-              label: 'A favor ✅',
-              value: 'A favor'
-            },
-            {
-              label: 'Indeciso/a 🤔',
-              value: 'Indecisión'
-            },
-            {
-              label: 'En contra ❌',
-              value: 'En contra'
-            }
-          ]
-        },
-      },
-      {
-        id: '6',
-        question: 'El año pasado el Congreso aprobó un nuevo impuesto para las plataformas digitales. ¿Qué opinas sobre esto?',
-        shortQuestion: 'Impuesto a las plataformas digitales',
-        input: {
-          type: 'radio',
-          values: [
-            {
-              label: 'A favor ✅',
-              value: 'A favor'
-            },
-            {
-              label: 'Indeciso/a 🤔',
-              value: 'Indecisión'
-            },
-            {
-              label: 'En contra ❌',
-              value: 'En contra'
-            }
-          ]
-        },
-      },
-    ]
+// temp
+const getRandomInt = (min: number, max: number): number => {
+  const minVal = Math.ceil(min);
+  const maxVal = Math.floor(max);
+  return Math.floor(Math.random() * (maxVal - minVal) + minVal);
+};
+
+const RESPUESTAS_POSIBLES_DIPUTADE = ['A favor', 'En contra', 'Abstención', 'No se presentó'];
+const QUIZ_LENGTH = 10;
+
+const getRandomAnswers = (): string[] => {
+  const answers: string[] = [];
+  for (let i = 0; i < QUIZ_LENGTH; i++) {
+    answers.push(RESPUESTAS_POSIBLES_DIPUTADE[getRandomInt(0, 4)]);
   }
+
+  return answers;
 };
 
 const RESPUESTAS_REPRESENTANTE = {
-  id: '12345',
-  fullName: 'Representante de prueba',
-  photo: 'https://www.pngarts.com/files/5/User-Avatar-Transparent.png',
-  previousParty: {
-    id: '21435',
-    name: 'Partido anterior',
-    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png'
-  },
-  currentParty: {
-    id: '54246',
-    name: 'Partido de prueba',
-    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png'
-  },
-  sub: {
-    id: '12345',
-    fullName: 'Representante suplente de prueba',
-  },
-  answers: ['A favor', 'En contra', 'Abstención', 'A favor', 'En contra', 'No se presentó'],
-  district: '15',
-  reelection: true
+  answers: getRandomAnswers()
 };
 
 const RESPUESTAS_PARTIDOS = [
@@ -544,62 +408,75 @@ const RESPUESTAS_PARTIDOS = [
     name: 'Partido 1',
     color: '#731717',
     logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
-    answers: ['A favor', 'En contra', 'Abstención', 'A favor', 'En contra', 'No se presentó'],
+    answers: getRandomAnswers(),
   },
   {
     id: '908',
     color: '#FF0000',
     name: 'Partido 2',
     logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
-    answers: ['A favor', 'A favor', 'A favor', 'A favor', 'En contra', 'A favor'],
+    answers: getRandomAnswers(),
   },
   {
     id: '123',
     name: 'Partido 3',
     color: '#0037DB',
     logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
-    answers: ['A favor', 'En contra', 'Abstención', 'Abstención', 'En contra', 'A favor'],
+    answers: getRandomAnswers(),
   },
   {
     id: '2186435',
     name: 'Partido 4',
     color: '#FF6D24',
     logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
-    answers: ['En contra', 'En contra', 'En contra', 'A favor', 'En contra', 'En contra'],
+    answers: getRandomAnswers(),
   },
   {
     id: '2454',
     name: 'Partido 5',
     color: '#EDE731',
     logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
-    answers: ['Abstención', 'Abstención', 'Abstención', 'A favor', 'A favor', 'A favor'],
+    answers: getRandomAnswers(),
   }
 ];
 
 const App: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(-2);
-  const [seccion, setSeccion] = useState<string>('');
-  const [entidad, setEntidad] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [userAnswers, setUserAnswers] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [hasSeccionError, setHasSeccionError] = useState<boolean>(false);
-  const [seccionError, setSeccionError] = useState<string>('');
-  const [hasSendingError, setHasSendingError] = useState<boolean>(false);
-  const [hasEmailError, setHasEmailError] = useState<boolean>(false);
-  const [hasEmailSubmit, sethasEmailSubmit] = useState<boolean>(false);
+  const [seccion, setSeccion] = useState('');
+  const [entidad, setEntidad] = useState('');
+  const [email, setEmail] = useState('');
+  const [preguntasQuiz, setPreguntasQuiz] = useState<QuizQuestionsType | undefined>();
+  const [hasGetPreguntasError, setHasGetPreguntasError] = useState(false);
+  const [getPreguntasError, setGetPreguntasError] = useState('');
+  const [userAnswers, setUserAnswers] = useState<SetPreguntaRequest[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [hasSeccionError, setHasSeccionError] = useState(false);
+  const [seccionError, setSeccionError] = useState('');
+  const [sendingError, setSendingError] = useState('');
+  const [hasSendingError, setHasSendingError] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [hasEmailError, setHasEmailError] = useState(false);
+  const [hasEmailSubmit, sethasEmailSubmit] = useState(false);
   const [diputade, setDiputade] = useState<GetDiputadeResponse | undefined>();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [distrito, setDistrito] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Effects handlers
+  useEffect(() => {
+    ReactModal.setAppElement(document.getElementById('root-latitud312') as HTMLElement);
+    console.log('answers', RESPUESTAS_REPRESENTANTE.answers);
+  }, []);
   
   useEffect(() => {
-    const initUserAnswers: string[] = [];
-    for (let i = 0; i < QUIZ.quiz.pages.length; i++) {
-      initUserAnswers.push('');
-    }
+    if (preguntasQuiz) {
+      const initUserAnswers: ('')[] = [];
+      for (let i = 0; i < preguntasQuiz.quiz.pages.length; i++) {
+        initUserAnswers.push('');
+      }
 
-    setUserAnswers(initUserAnswers);
-    ReactModal.setAppElement(document.getElementById('root-latitud312') as HTMLElement);
-  }, []);
+      setUserAnswers(initUserAnswers);
+    }
+  }, [preguntasQuiz]);
 
   useEffect(() => {
     document.getElementById('card-container')?.scrollTo({
@@ -608,24 +485,23 @@ const App: FC = () => {
     });
   }, [currentPage]);
 
-  // Temp
-  const later = (delay, value) => {
-    let timeout = 0;
-    let reject: (() => void) | null = null;
-    const promise = new Promise((resolve, _reject) => {
-      reject = _reject;
-      timeout = window.setTimeout(resolve, delay, value);
-    });
-    return {
-      get promise() { return promise; },
-      cancel() {
-        if (typeof timeout === 'number' && timeout && reject && Math.random() <= 0.2) {
-          clearTimeout(timeout);
-          reject();
-          reject = null;
-        }
-      }
-    };
+  // Event handlers
+  const handleInitQuizClick = () => {
+    setHasGetPreguntasError(false);
+    setLoading(true);
+    getPreguntas()
+      .then(data => {
+        setPreguntasQuiz(data.data);
+        setCurrentPage(currentPage + 1);
+      })
+      .catch((err: AxiosError) => {
+        console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
+        setGetPreguntasError(`${err.response?.data.description}`);
+        setHasGetPreguntasError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleSeccionChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -635,8 +511,16 @@ const App: FC = () => {
     setSeccion(e.target.value);
   };
 
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (hasEmailError) {
+      setHasEmailError(false);
+    }
+    setEmail(e.target.value);
+  };
+
   const handleZipCodeSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setHasSeccionError(false);
     setLoading(true);
     getDiputade({
       seccion,
@@ -645,12 +529,15 @@ const App: FC = () => {
       .then(response => {
         setHasSeccionError(false);
         setDiputade(response.data);
+        setDistrito(response.data.distrito);
         setCurrentPage(currentPage + 1);
       })
       .catch((err: AxiosError) => {
         console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
         setSeccionError(`${err.response?.data.description}`);
         setHasSeccionError(true);
+        setSeccion('');
+        setEntidad('');
       })
       .finally(() => {
         setLoading(false);
@@ -659,13 +546,14 @@ const App: FC = () => {
 
   const handleQuestionsSubmit = () => {
     setLoading(true);
-    later(500, false).promise
-      .then(val => {
-        setHasSendingError(val as boolean);
+    setRespuesta(userAnswers)
+      .then(() => {
+        setHasSendingError(false);
         setCurrentPage(currentPage + 1);
       })
-      .catch(err => {
-        console.error(err);
+      .catch((err: AxiosError) => {
+        console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
+        setSendingError(`${err.response?.data.description}`);
         setHasSendingError(true);
       })
       .finally(() => {
@@ -675,13 +563,16 @@ const App: FC = () => {
 
   const handleEmailSubmit = () => {
     setLoading(true);
-    later(500, false).promise
-      .then(val => {
-        setHasEmailError(val as boolean);
+    setCorreo({
+      correo: email
+    })
+      .then(() => {
+        setHasEmailError(false);
         sethasEmailSubmit(true);
       })
-      .catch(err => {
-        console.error(err);
+      .catch((err: AxiosError) => {
+        console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
+        setEmailError(`${err.response?.data.description}`);
         setHasEmailError(true);
       })
       .finally(() => {
@@ -689,15 +580,20 @@ const App: FC = () => {
       });
   };
 
-  const handleUserAnswer = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleUserAnswer = (e: ChangeEvent<HTMLInputElement>, distrito: number, id_pregunta: number) => {
     const currentUserAnswers = [...userAnswers];
 
     if (currentPage >= 0 && currentPage < currentUserAnswers.length) {
-      currentUserAnswers[currentPage] = e.target.value;
+      currentUserAnswers[currentPage] = {
+        id_pregunta,
+        distrito_usuarie: distrito,
+        respuesta: e.target.value
+      };
       setUserAnswers(currentUserAnswers);
     }
   };
 
+  // Component rendering functions
   const renderIntroCard = () => {
     return (
       <FullSizeFade>
@@ -713,9 +609,13 @@ const App: FC = () => {
               Contesta estas 5 preguntas para descubrir la respuesta.  
             </IntroCardHeader>
           </ParagraphContainer>
-          <Button onClick={() => setCurrentPage(currentPage + 1)}>
+          <Button onClick={handleInitQuizClick}>
             Empieza aquí
           </Button>
+          {hasGetPreguntasError &&
+          <ErrorText>
+            {getPreguntasError}
+          </ErrorText>}
         </CardContentContainer>
       </FullSizeFade>
     );
@@ -777,69 +677,75 @@ const App: FC = () => {
   };
 
   const renderQuizCard = () => {
-    const cardValues = QUIZ.quiz.pages[currentPage].input.values.map((val, i) => {
-      if (QUIZ.quiz.pages[currentPage].input.type === 'radio') {
-        return (
-          <LabelValueContainer key={`${QUIZ.quiz.pages[currentPage].input.type}-${val.value.split(' ').join('-')}-${i}-${QUIZ.quiz.pages[currentPage].id}`}>
-            <RadioButton
-              id={`${QUIZ.quiz.pages[currentPage].input.type}-${val.value.split(' ').join('-')}-${QUIZ.quiz.pages[currentPage].id}`}
-              value={val.value}
-              onChange={handleUserAnswer}
-              name={`question-${QUIZ.quiz.pages[currentPage].id}`}
-            />
-            <label
-              htmlFor={`${QUIZ.quiz.pages[currentPage].input.type}-${val.value.split(' ').join('-')}-${QUIZ.quiz.pages[currentPage].id}`}
-            >
-              {val.label}
-            </label>
-          </LabelValueContainer>
-        );
-      }
-
-      return <></>;
-    });
-
-    return (
-      <FullSizeFade>
-        <CardQuestionContentContainer>
-          <QuizQuestionHeader>
-            <MobileBackButton onClick={() => setCurrentPage(currentPage - 1)}>
-              Atrás
-            </MobileBackButton>
-            <p>
-              {currentPage + 1} de {QUIZ.quiz.pages.length}
-            </p>
-          </QuizQuestionHeader>
-          <fieldset>
-            <CardQuestion>
-              {QUIZ.quiz.pages[currentPage].question}
-            </CardQuestion>
-            <CardValues>
-              {cardValues}
-            </CardValues>
-          </fieldset>
-          <QuizQuestionFooter>
-            <DesktopBackButton onClick={() => setCurrentPage(currentPage - 1)}>
-              Atrás
-            </DesktopBackButton>
-            <Button
-              onClick={() => {
-                if (currentPage === QUIZ.quiz.pages.length - 1) {
-                  handleQuestionsSubmit();
-                }
-
-                if (!hasSendingError) {
-                  setCurrentPage(currentPage + 1);
-                }
-              }}
-              disabled={userAnswers[currentPage] === ''}
-            >
-              Continuar
-            </Button>
-          </QuizQuestionFooter>
-        </CardQuestionContentContainer>
-      </FullSizeFade>
-    );
+    if (preguntasQuiz) {
+      const cardValues = preguntasQuiz.quiz.pages[currentPage].input.values.map((val, i) => {
+        if (preguntasQuiz.quiz.pages[currentPage].input.type === 'radio') {
+          return (
+            <LabelValueContainer key={`${preguntasQuiz.quiz.pages[currentPage].input.type}-${val.value.split(' ').join('-')}-${i}-${preguntasQuiz.quiz.pages[currentPage].id_pregunta}`}>
+              <RadioButton
+                id={`${preguntasQuiz.quiz.pages[currentPage].input.type}-${val.value.split(' ').join('-')}-${preguntasQuiz.quiz.pages[currentPage].id_pregunta}`}
+                value={val.value}
+                onChange={(e) => handleUserAnswer(e, distrito, preguntasQuiz.quiz.pages[currentPage].id_pregunta)}
+                name={`question-${preguntasQuiz.quiz.pages[currentPage].id_pregunta}`}
+              />
+              <label
+                htmlFor={`${preguntasQuiz.quiz.pages[currentPage].input.type}-${val.value.split(' ').join('-')}-${preguntasQuiz.quiz.pages[currentPage].id_pregunta}`}
+              >
+                {val.label}
+              </label>
+            </LabelValueContainer>
+          );
+        }
+  
+        return <></>;
+      });
+  
+      return (
+        <FullSizeFade>
+          <CardQuestionContentContainer>
+            <QuizQuestionHeader>
+              <MobileBackButton onClick={() => setCurrentPage(currentPage - 1)}>
+                Atrás
+              </MobileBackButton>
+              <p>
+                {currentPage + 1} de {preguntasQuiz.quiz.pages.length}
+              </p>
+            </QuizQuestionHeader>
+            <fieldset>
+              <CardQuestion>
+                {preguntasQuiz.quiz.pages[currentPage].pregunta}
+              </CardQuestion>
+              <CardValues>
+                {cardValues}
+              </CardValues>
+            </fieldset>
+            <QuizQuestionFooter>
+              <DesktopBackButton onClick={() => setCurrentPage(currentPage - 1)}>
+                Atrás
+              </DesktopBackButton>
+              <Button
+                onClick={() => {
+                  if (currentPage === preguntasQuiz.quiz.pages.length - 1) {
+                    handleQuestionsSubmit();
+                  }
+  
+                  if (!hasSendingError) {
+                    setCurrentPage(currentPage + 1);
+                  }
+                }}
+                disabled={userAnswers[currentPage] === ''}
+              >
+                Continuar
+              </Button>
+              {hasSendingError &&
+              <ErrorText>
+                {sendingError}  
+              </ErrorText>}
+            </QuizQuestionFooter>
+          </CardQuestionContentContainer>
+        </FullSizeFade>
+      );
+    }
   };
 
   const renderReadyCard = () => {
@@ -872,10 +778,13 @@ const App: FC = () => {
     let percentageResult = 0;
 
     for (let i = 0; i < userAnswers.length; i += 1) {
-      if (userAnswers[i] === RESPUESTAS_REPRESENTANTE.answers[i]) {
+      console.log((userAnswers[i] as PreguntaType).respuesta, RESPUESTAS_REPRESENTANTE.answers[i]);
+      if ((userAnswers[i] as PreguntaType).respuesta === RESPUESTAS_REPRESENTANTE.answers[i]) {
         percentageResult += 1;
       }
     }
+
+    console.log(percentageResult);
 
     if (userAnswers.length > 0) {
       percentageResult = Math.round((percentageResult / userAnswers.length) * 100);
@@ -897,7 +806,7 @@ const App: FC = () => {
             <DiputadePhotoContainer>
               <DiputadePhoto
                 alt='Foto del representante de tu distrito'
-                src={diputade?.foto && isUrl(diputade.foto) ? diputade.foto : RESPUESTAS_REPRESENTANTE.photo} 
+                src={diputade?.foto && isUrl(diputade.foto) ? diputade.foto : NoPhoto} 
               />
             </DiputadePhotoContainer>
             <DiputadeTextContainer>
@@ -952,27 +861,29 @@ const App: FC = () => {
   };
 
   const renderRepAnswersCard = () => {
-    const resp = QUIZ.quiz.pages.map((q, i) => (
-      <RepresentativeAnswer key={q.id}>
-        {q.shortQuestion}: <UnderlinedSpan>{RESPUESTAS_REPRESENTANTE.answers[i]}</UnderlinedSpan>
-      </RepresentativeAnswer>
-    ));
-
-    return (
-      <FullSizeFade>
-        <CardContentContainer>
-          <RepAnswersHeader>
-            Así fue cómo voto el diputado/a de tu distrito:
-          </RepAnswersHeader>
-          <AnswersWrapper>
-            {resp}
-          </AnswersWrapper>
-          <Button onClick={() => setCurrentPage(currentPage + 1)}>
-            Ver más resultados
-          </Button>
-        </CardContentContainer>
-      </FullSizeFade>
-    );
+    if (preguntasQuiz) {
+      const resp = preguntasQuiz.quiz.pages.map((q, i) => (
+        <RepresentativeAnswer key={q.id_pregunta}>
+          {q.pregunta_corta}: <UnderlinedSpan>{RESPUESTAS_REPRESENTANTE.answers[i]}</UnderlinedSpan>
+        </RepresentativeAnswer>
+      ));
+  
+      return (
+        <FullSizeFade>
+          <CardContentContainer>
+            <RepAnswersHeader>
+              Así fue cómo voto el diputado/a de tu distrito:
+            </RepAnswersHeader>
+            <AnswersWrapper>
+              {resp}
+            </AnswersWrapper>
+            <Button onClick={() => setCurrentPage(currentPage + 1)}>
+              Ver más resultados
+            </Button>
+          </CardContentContainer>
+        </FullSizeFade>
+      );
+    }
   };
   
   const renderPartyAnswers = () => {
@@ -980,7 +891,7 @@ const App: FC = () => {
       let percentageResult = 0;
 
       for (let i = 0; i < userAnswers.length; i += 1) {
-        if (userAnswers[i] === r.answers[i]) {
+        if ((userAnswers[i] as PreguntaType).respuesta === r.answers[i]) {
           percentageResult += 1;
         }
       }
@@ -1042,22 +953,26 @@ const App: FC = () => {
               Si estás interesado/a en recibir más noticias e información para entender la política, ¡regístrate aquí! 👇
             </IntroCardHeader>
           </ParagraphContainer>
-          <InputZipCodeContainer>
+          {!hasEmailSubmit && <InputZipCodeContainer>
             <label htmlFor='correo-electronico'>Correo electrónico:</label>
             <TextInput
               id='correo-electronico'
               type='email'
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               error={hasEmailError}
               success={hasEmailSubmit}
               placeholder='Escribe aquí tu correo electrónico: '
               required
             />
-          </InputZipCodeContainer>
+          </InputZipCodeContainer>}
           {hasEmailSubmit &&
           <SuccessfulRegistrationText>
             ¡Registro exitoso!
           </SuccessfulRegistrationText>}
+          {hasEmailError &&
+          <ErrorText>
+            {emailError}
+          </ErrorText>}
           {!hasEmailSubmit &&
           <Button
             type='submit'
@@ -1075,21 +990,21 @@ const App: FC = () => {
       return renderIntroCard();
     } else if (currentPage === -1) {
       return renderZipCodeCard();
-    } else if (currentPage >= 0 && currentPage < QUIZ.quiz.pages.length) {
+    } else if (currentPage >= 0 && preguntasQuiz && currentPage < preguntasQuiz.quiz.pages.length) {
       return renderQuizCard();
-    } else if (currentPage === QUIZ.quiz.pages.length) {
+    } else if (preguntasQuiz && currentPage === preguntasQuiz.quiz.pages.length) {
       return renderReadyCard();
-    } else if (currentPage === QUIZ.quiz.pages.length + 1) {
+    } else if (preguntasQuiz && currentPage === preguntasQuiz.quiz.pages.length + 1) {
       return renderRepResultsCard();
-    } else if (currentPage === QUIZ.quiz.pages.length + 2) {
+    } else if (preguntasQuiz && currentPage === preguntasQuiz.quiz.pages.length + 2) {
       return renderRepAnswersCard();
-    } else if (currentPage === QUIZ.quiz.pages.length + 3) {
+    } else if (preguntasQuiz && currentPage === preguntasQuiz.quiz.pages.length + 3) {
       return renderPartyAnswers();
-    } else if (currentPage === QUIZ.quiz.pages.length + 4) {
+    } else if (preguntasQuiz && currentPage === preguntasQuiz.quiz.pages.length + 4) {
       return renderRegisterEmailCard();
     }
 
-    return <></>;
+    return <h1>Hubo un error. Intenta nuevamente.</h1>;
   };
 
   return (

@@ -7,7 +7,7 @@ export type GetDiputadeResponse = {
   bancada_original: string;
   nombre_diputade: string;
   num_entidad: number;
-  distrito: string;
+  distrito: number;
   tipo: string;
   id_legislativo: number;
   bancada_actual: string;
@@ -22,4 +22,37 @@ export type GetDiputadeResponse = {
   municipio: number;
   nombre_municipio: string;
   seccion: number;
+}
+
+type QuizInputType = {
+  label: string;
+  value: string;
+};
+
+type QuizPagesType = {
+  id_pregunta: number;
+  pregunta: string;
+  pregunta_corta: string;
+  input: {
+    type: string;
+    values: QuizInputType[];
+  };
+}
+
+export type QuizQuestionsType = {
+  quiz: {
+    pages: QuizPagesType[];
+  };
+}
+
+export type PreguntaType = {
+  id_pregunta: number;
+  respuesta: string | number | boolean | string[] | number[] | boolean[];
+  distrito_usuarie: number;
+}
+
+export type SetPreguntaRequest = PreguntaType | '';
+
+export type SetCorreoRequest = {
+  correo: string;
 }
