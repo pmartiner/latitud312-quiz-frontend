@@ -256,9 +256,17 @@ const RepresentationLabel = styled.p`
   }
 `;
 
-const RepresentativeAnswer = styled(RepresentationLabel)`
-  font-weight: bold;
-  padding: 10px 0;
+const RepresentativeAnswer = styled.li`
+  font-size: 24px;
+  font-weight: 500;
+  max-width: 100%;
+  font-weight: normal;
+  padding-top: 15px;
+  align-self: flex-start;
+
+  @media screen and (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 const DiputadeContainer = styled.div`
@@ -331,7 +339,8 @@ const RepAnswersHeader = styled(ResHeader)`
   }
 `;
 
-const AnswersWrapper = styled.div`
+const AnswersWrapper = styled.ul`
+  list-style-type: none;
   padding-bottom: 20px;
   width: 100%;
 `;
@@ -888,7 +897,7 @@ const App: FC = () => {
         <FullSizeFade>
           <CardContentContainer>
             <RepAnswersHeader>
-              Así fue cómo voto el diputado/a de tu distrito:
+              Así votó tu diputado/a (distrito {diputade?.distrito || '-1'}):
             </RepAnswersHeader>
             <AnswersWrapper>
               {resp}
@@ -973,7 +982,7 @@ const App: FC = () => {
               Juntos y juntas podemos construir una democracia más saludable.
             </IntroCardHeader>
             <IntroCardHeader>
-              Si estás interesado/a en recibir más noticias e información para entender la política, ¡regístrate aquí! 👇
+              Si estás interesado/a en recibir más información sobre los votos del diputado/a electo/a, ¡regístrate aquí! 👇
             </IntroCardHeader>
           </ParagraphContainer>
           {!hasEmailSubmit && <InputZipCodeContainer>
