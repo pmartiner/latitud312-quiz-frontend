@@ -28,7 +28,7 @@ Una vez modificado (o no) el archivo de `webpack`, se puede construir el proyect
 ```
 yarn build
 ```
-Este comando transpilará el código de TypeScript a JavaScript, creará un archivo para los polyfills y depositará ambos en `@/dist`, donde la `@` es la dirección de la carpeta raíz de este proyecto.
+Este comando transpilará el código de TypeScript a JavaScript, creará un archivo para los polyfills y depositará ambos en `@/dist`, donde la `@` es la dirección de la carpeta raíz de este proyecto. Esta aplicación está desplegada en [Vercel](https://vercel.com).
 
 ### Contribución
 Si deseas contribuir a mejorar este proyecto, te pido crees un *Issue* de GitHub y/o crees un Pull Request con los cambios que propones.

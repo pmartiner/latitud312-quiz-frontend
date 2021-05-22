@@ -54,6 +54,7 @@ import {
 import INE_Seccion from 'src/assets/images/partidos/INE_Seccion.jpg';
 import NoPhoto from 'src/assets/images/no-photo.png';
 import Logo from 'src/assets/images/logo.png';
+import LinkButton from './Button/LinkButton';
 
 const CardQuestion = styled.legend`
   font-size: 30px;
@@ -379,6 +380,23 @@ const UnderlinedSpan = styled.span`
   border-bottom: 6px solid ${ACCENT_COLOR_LIGHT};
 `;
 
+const YourAnswerSpan = styled(UnderlinedSpan)`
+  font-weight: bold;
+  padding: 0 10px;
+  font-size: 16px;
+  line-height: 32px;
+  border: 0;
+
+  @media screen and (max-width: 1024px) {
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
+`;
+
+
 const INEContainer = styled.div`
   display: flex;
   flex-flow: column nowrap;
@@ -640,7 +658,7 @@ const App: FC = () => {
         <CardZipCodeContentContainer onSubmit={handleZipCodeSubmit}>
           <ParagraphContainer>
             <IntroCardHeader>
-              Para poder comenzar, te pedimos escribas tu sección electoral, que encontrarás en tu INE, y tu estado.
+              Para poder comenzar, escribe tu sección electoral (que encontrarás en tu credencial de elector) y tu estado.
             </IntroCardHeader>
             <IntroCardHeader>
               Únicamente utilizaremos estos datos para determinar a los y las representantes de tu distrito.
@@ -889,9 +907,20 @@ const App: FC = () => {
           {q.pregunta_corta}: <UnderlinedSpan>
             {respuestasDiputade[i].votacion.toUpperCase().trim() === 'NA'
               ? 'SIN INFORMACIÓN SOBRE SU VOTO'
-              : `${respuestasDiputade[i].votacion.toUpperCase().trim()} ${getEmojiByAnswer(respuestasDiputade[i].votacion.toUpperCase().trim())}`
+              : `${
+                respuestasDiputade[i].votacion.toUpperCase().trim()
+              } ${
+                getEmojiByAnswer(respuestasDiputade[i].votacion.toUpperCase().trim())
+              }`
             }
           </UnderlinedSpan>
+          <YourAnswerSpan>
+            (Tu votaste: {
+              ((userAnswers[i] as PreguntaType).respuesta as string).toUpperCase().trim()
+            } {
+              getEmojiByAnswer(((userAnswers[i] as PreguntaType).respuesta as string).toUpperCase().trim())
+            })
+          </YourAnswerSpan>
         </RepresentativeAnswer>
       ));
   
@@ -1000,9 +1029,18 @@ const App: FC = () => {
             />
           </InputZipCodeContainer>}
           {hasEmailSubmit &&
-          <SuccessfulRegistrationText>
-            ¡Registro exitoso!
-          </SuccessfulRegistrationText>}
+          <>
+            <SuccessfulRegistrationText>
+              ¡Registro exitoso!
+            </SuccessfulRegistrationText>
+            <LinkButton
+              target='_blank'
+              href='https://www.latitud312.com'
+              rel='noopener'
+            >
+              Ir a Latitud 3°12
+            </LinkButton>
+          </>}
           {hasEmailError &&
           <ErrorText>
             {emailError}

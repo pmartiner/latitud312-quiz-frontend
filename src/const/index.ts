@@ -207,6 +207,8 @@ export const getEmojiByAnswer = (answer: string): string => {
     return '❌';
   } else if (answer === 'ABSTENCIÓN') {
     return '👻';
+  } else if (answer === 'INDECISIÓN') {
+    return '🤔';
   }
 
   return '';
