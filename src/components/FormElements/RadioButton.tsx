@@ -48,7 +48,13 @@ const RadioGroup = styled.input`
       transition: all 0.3s ease;
   }
   &[type="radio"]:checked + label:hover:before,
-  &[type="radio"]:not(:checked) + label:hover:before {
+  &[type="radio"]:not(:checked) + label:hover:before,
+  &[type="radio"]:checked + label:focus:before,
+  &[type="radio"]:not(:checked) + label:focus:before,
+  &[type="radio"]:checked + label:focus-visible:before,
+  &[type="radio"]:not(:checked) + label:focus-visible:before,
+  &[type="radio"]:checked + label:focus-within:before,
+  &[type="radio"]:not(:checked) + label:focus-within:before {
       border-color: #ccc;
       background: #ccc;
       transition: all 0.3s ease;

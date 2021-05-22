@@ -602,7 +602,7 @@ const App: FC = () => {
         <CardContentContainer>
           <ParagraphContainer>
             <IntroCardHeader>
-              ¿Sabías que éstas son las primeras elecciones en las que tu diputado/a puede reelegirse?
+              ¿Sabías que estas son las primeras elecciones en las que tu diputado/a puede reelegirse?
             </IntroCardHeader>
             <IntroCardHeader>
               Descubre si tu diputado/a te ha representado bien o si necesitas buscar una alternativa. 
