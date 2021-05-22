@@ -14,14 +14,14 @@ const SelectWrapper = styled.div`
 `;
 
 const SelectLabel = styled.label`
-  font-size: 12px;
+  font-size: 16px;
   font-weight: bold;
   color: ${ACCENT_COLOR_DARK};
   padding-bottom: 5px;
 `;
 
 const Select = styled.select`
-  font-size: 14px;
+  font-size: 16px;
   color: ${ACCENT_COLOR_DARK};
   border: 2px solid ${ACCENT_COLOR_DARK};
   border-radius: 6px;

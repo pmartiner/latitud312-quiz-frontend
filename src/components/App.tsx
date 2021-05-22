@@ -41,7 +41,7 @@ import {
 import SelectComponent from 'components/Select/Select';
 
 // Constantes
-import { ENTIDADES, PARTIDOS } from '../const';
+import { ENTIDADES, PARTIDOS, getEmojiByAnswer } from '../const';
 import {
   ACCENT_COLOR,
   ACCENT_COLOR_DARK,
@@ -126,6 +126,7 @@ const InputZipCodeContainer = styled.div`
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-start;
+  padding: 15px 5px;
   padding-bottom: 20px;
 `;
 
@@ -164,7 +165,7 @@ const QuizQuestionHeader = styled.header`
 `;
 
 const Label = styled.label`
-  font-size: 12px;
+  font-size: 16px;
   font-weight: bold;
   color: ${ACCENT_COLOR_DARK};
   padding-bottom: 5px;
@@ -658,7 +659,7 @@ const App: FC = () => {
             id='entidades'
             label='Estado:'
             options={ENTIDADES}
-            placeholder={'Elija el estado en donde reside, por favor.'}
+            placeholder={'Elige el estado donde resides'}
             onChange={(e) => setEntidad(e.target.value)}
           />
           <InputZipCodeContainer>
@@ -887,7 +888,7 @@ const App: FC = () => {
           {q.pregunta_corta}: <UnderlinedSpan>
             {respuestasDiputade[i].votacion.toUpperCase().trim() === 'NA'
               ? 'SIN INFORMACIÓN SOBRE SU VOTO'
-              : respuestasDiputade[i].votacion.toUpperCase().trim()
+              : `${respuestasDiputade[i].votacion.toUpperCase().trim()} ${getEmojiByAnswer(respuestasDiputade[i].votacion.toUpperCase().trim())}`
             }
           </UnderlinedSpan>
         </RepresentativeAnswer>

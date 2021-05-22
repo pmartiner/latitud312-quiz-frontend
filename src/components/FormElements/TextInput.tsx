@@ -22,7 +22,7 @@ const TextInput = styled.input<InputType>`
   border-radius: 6px;
   padding: 10px;
   width: 200px;
-  font-size: 14px;
+  font-size: 16px;
   color: ${ACCENT_COLOR_DARK};
 `;
 

@@ -199,3 +199,15 @@ export const PARTIDOS = [
   },
 
 ];
+
+export const getEmojiByAnswer = (answer: string): string => {
+  if (answer === 'A FAVOR') {
+    return '✅';
+  } else if (answer === 'EN CONTRA') {
+    return '❌';
+  } else if (answer === 'ABSTENCIÓN') {
+    return '👻';
+  }
+
+  return '';
+};
