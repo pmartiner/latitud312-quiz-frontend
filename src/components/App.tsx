@@ -19,12 +19,19 @@ import ProgressBar from 'components/ProgressBar/ProgressBar';
 // API
 import { getDiputade } from 'api/distritos';
 import { getPreguntas } from 'api/preguntas';
-import { setRespuesta } from 'api/respuestas';
+import { getRespuestasDiputade, getRespuestasPartidos, setRespuesta } from 'api/respuestas';
 import { setCorreo } from 'api/correos';
 
 // Tipos
 import { AxiosError } from 'axios';
-import { GetDiputadeResponse, PreguntaType, QuizQuestionsType, SetPreguntaRequest } from 'types/api';
+import {
+  GetDiputadeResponse,
+  PartidoResponse,
+  PreguntaType,
+  QuizQuestionsType,
+  RespuestaDP,
+  SetPreguntaRequest
+} from 'types/api';
 import SelectComponent from 'components/Select/Select';
 
 // Constantes
@@ -247,12 +254,11 @@ const RepresentativeAnswer = styled(RepresentationLabel)`
 
 const DiputadeContainer = styled.div`
   display: flex;
-  
   justify-content: space-around;
   width: 100%;
   align-items: center;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1024px) {
     justify-content: center;
     flex-flow: column nowrap;
   }
@@ -265,7 +271,7 @@ const DiputadeTextContainer = styled.div`
   width: 100%;
   padding: 25px;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1024px) {
     padding: 0px;
   }
 `;
@@ -402,44 +408,6 @@ const RESPUESTAS_REPRESENTANTE = {
   answers: getRandomAnswers()
 };
 
-const RESPUESTAS_PARTIDOS = [
-  {
-    id: '7657',
-    name: 'Partido 1',
-    color: '#731717',
-    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
-    answers: getRandomAnswers(),
-  },
-  {
-    id: '908',
-    color: '#FF0000',
-    name: 'Partido 2',
-    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
-    answers: getRandomAnswers(),
-  },
-  {
-    id: '123',
-    name: 'Partido 3',
-    color: '#0037DB',
-    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
-    answers: getRandomAnswers(),
-  },
-  {
-    id: '2186435',
-    name: 'Partido 4',
-    color: '#FF6D24',
-    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
-    answers: getRandomAnswers(),
-  },
-  {
-    id: '2454',
-    name: 'Partido 5',
-    color: '#EDE731',
-    logo: 'https://iowastartingline.com/wp-content/uploads/2016/09/Political-Party-Logo.png',
-    answers: getRandomAnswers(),
-  }
-];
-
 const App: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(-2);
   const [seccion, setSeccion] = useState('');
@@ -460,6 +428,12 @@ const App: FC = () => {
   const [diputade, setDiputade] = useState<GetDiputadeResponse | undefined>();
   const [distrito, setDistrito] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [respuestasPartidos, setRespuestasPartidos] = useState<PartidoResponse[]>([]);
+  const [hasRespuestasPartidoError, setHasRespuestasPartidoError] = useState(false);
+  const [respuestasPartidoError, setRespuestasPartidoError] = useState('');
+  const [, setRespuestasDiputade] = useState<RespuestaDP[]>([]);
+  const [hasRespuestasDiputadeError, setHasRespuestasDiputadeError] = useState(false);
+  const [respuestasDiputadeError, setRespuestasDiputadeError] = useState('');
 
   // Effects handlers
   useEffect(() => {
@@ -554,10 +528,26 @@ const App: FC = () => {
         console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
         setSendingError(`${err.response?.data.description}`);
         setHasSendingError(true);
-      })
-      .finally(() => {
-        setLoading(false);
       });
+    getRespuestasDiputade(diputade?.id_legislativo || 0)
+      .then(data => {
+        setRespuestasDiputade(data.data);
+      })
+      .catch((err: AxiosError) => {
+        console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
+        setRespuestasDiputadeError(`${err.response?.data.description}`);
+        setHasRespuestasDiputadeError(true);
+      });
+    getRespuestasPartidos()
+      .then(data => {
+        setRespuestasPartidos(data.data);
+      })
+      .catch((err: AxiosError) => {
+        console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
+        setRespuestasPartidoError(`${err.response?.data.description}`);
+        setHasRespuestasPartidoError(true);
+      });
+    setLoading(false);
   };
 
   const handleEmailSubmit = () => {
@@ -740,6 +730,14 @@ const App: FC = () => {
               <ErrorText>
                 {sendingError}  
               </ErrorText>}
+              {hasRespuestasDiputadeError &&
+              <ErrorText>
+                {respuestasDiputadeError}  
+              </ErrorText>}
+              {hasRespuestasPartidoError &&
+              <ErrorText>
+                {respuestasPartidoError}  
+              </ErrorText>}
             </QuizQuestionFooter>
           </CardQuestionContentContainer>
         </FullSizeFade>
@@ -775,21 +773,25 @@ const App: FC = () => {
 
   const renderRepResultsCard = () => {
     let percentageResult = 0;
+    const total = RESPUESTAS_REPRESENTANTE.answers.length;
 
     for (let i = 0; i < userAnswers.length; i += 1) {
-      if ((userAnswers[i] as PreguntaType).respuesta === RESPUESTAS_REPRESENTANTE.answers[i]) {
+      if (
+        ((userAnswers[i] as PreguntaType).respuesta as string).toLowerCase().trim()
+          === RESPUESTAS_REPRESENTANTE.answers[i].toLowerCase().trim()
+      ) {
         percentageResult += 1;
       }
     }
 
-    if (userAnswers.length > 0) {
-      percentageResult = Math.round((percentageResult / userAnswers.length) * 100);
+    if (total > 0) {
+      percentageResult = Math.round((percentageResult / total) * 100);
     }
 
-    const partidoActualDiputade = PARTIDOS.find(p => p.name === diputade?.bancada_actual)
+    const partidoActualDiputade = PARTIDOS.find(p => p.name === diputade?.bancada_actual.toUpperCase())
       || PARTIDOS.find(p => p.name === 'SP');
 
-    const partidoAnteriorDiputade = PARTIDOS.find(p => p.name === diputade?.bancada_original)
+    const partidoAnteriorDiputade = PARTIDOS.find(p => p.name === diputade?.bancada_original.toUpperCase())
       || PARTIDOS.find(p => p.name === 'SP');
 
     return (
@@ -858,7 +860,7 @@ const App: FC = () => {
 
   const renderRepAnswersCard = () => {
     if (preguntasQuiz) {
-      const resp = preguntasQuiz.quiz.pages.map((q, i) => (
+      const resp = preguntasQuiz.quiz.pages.map((q, i)=> (
         <RepresentativeAnswer key={q.id_pregunta}>
           {q.pregunta_corta}: <UnderlinedSpan>{RESPUESTAS_REPRESENTANTE.answers[i]}</UnderlinedSpan>
         </RepresentativeAnswer>
@@ -883,24 +885,31 @@ const App: FC = () => {
   };
   
   const renderPartyAnswers = () => {
-    const resp = RESPUESTAS_PARTIDOS.map((r) => {
+    const resp = respuestasPartidos.map((r) => {
       let percentageResult = 0;
+      const total = respuestasPartidos.length;
+
+      const partido = PARTIDOS.find(p => p.name === r.name.toUpperCase())
+        || PARTIDOS.find(p => p.name === 'SP');
 
       for (let i = 0; i < userAnswers.length; i += 1) {
-        if ((userAnswers[i] as PreguntaType).respuesta === r.answers[i]) {
+        if (
+          ((userAnswers[i] as PreguntaType).respuesta as string).toLowerCase().trim()
+            === r.answers[i].votacion.toLowerCase().trim()
+        ) {
           percentageResult += 1;
         }
       }
   
-      if (userAnswers.length > 0) {
-        percentageResult = Math.round((percentageResult / userAnswers.length) * 100);
+      if (total > 0) {
+        percentageResult = Math.round((percentageResult / total) * 100);
       }
 
       return (
         <PartyPercentageContainer key={r.id}>
           <PartyPhoto
-            src={r.logo}
-            alt={`Partido ${r.name}`}
+            src={partido?.photo || ''}
+            alt={partido?.longName || 'Partido político'}
           />
           <MeterContainer>
             <ProgressBar

@@ -11,7 +11,7 @@ import PRD from 'src/assets/images/partidos/PRD.svg';
 import PRI from 'src/assets/images/partidos/PRI.svg';
 import PT from 'src/assets/images/partidos/PT.svg';
 import PVEM from 'src/assets/images/partidos/PVEM.svg';
-import SP from 'src/assets/images/partidos/SP.jpg';
+import SP from 'src/assets/images/partidos/SP.svg';
 
 export const ENTIDADES: OptionType[] = [
   {

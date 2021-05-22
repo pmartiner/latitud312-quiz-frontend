@@ -35,7 +35,7 @@ const ProgressBarMeter = styled.span<ProgressSizeMeterProps>`
   border-bottom-right-radius: 20px;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
-  background-color: ${props => props.meterColor ? props.meterColor : 'rgb(43,194,83)'};
+  background: ${props => props.meterColor ? props.meterColor : 'rgb(43,194,83)'};
   position: relative;
   overflow: hidden;
   width: ${props => {
