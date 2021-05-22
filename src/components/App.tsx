@@ -7,7 +7,8 @@ import ReactModal from 'react-modal';
 import ImageZoom from 'react-medium-image-zoom';
 
 // Componentes
-import Page from 'components/layout/Page';
+import Page from 'components/layout/Page/Page';
+import Navbar from 'components/layout/Navbar/Navbar';
 import QuizCard from 'components/Card/QuizCard';
 import Button from 'components/Button/Button';
 import BackButton from 'components/Button/BackButton';
@@ -19,11 +20,16 @@ import ProgressBar from 'components/ProgressBar/ProgressBar';
 // API
 import { getDiputade } from 'api/distritos';
 import { getPreguntas } from 'api/preguntas';
-import { getRespuestasDiputade, getRespuestasPartidos, setRespuesta } from 'api/respuestas';
 import { setCorreo } from 'api/correos';
+import {
+  getRespuestasDiputade,
+  getRespuestasPartidos,
+  setRespuesta
+} from 'api/respuestas';
 
 // Tipos
 import { AxiosError } from 'axios';
+import { URLType } from 'types/index';
 import {
   GetDiputadeResponse,
   PartidoResponse,
@@ -47,6 +53,7 @@ import {
 // Assets
 import INE_Seccion from 'src/assets/images/partidos/INE_Seccion.jpg';
 import NoPhoto from 'src/assets/images/no-photo.png';
+import Logo from 'src/assets/images/logo.png';
 
 const CardQuestion = styled.legend`
   font-size: 30px;
@@ -148,9 +155,11 @@ const QuizQuestionHeader = styled.header`
   justify-content: space-between;
   align-items: center;
   margin-bottom: auto;
+  padding-bottom: 15px;
 
   @media screen and (min-width: 769px) {
     justify-content: flex-end;
+    padding-bottom: 0;
   }
 `;
 
@@ -297,8 +306,8 @@ const PartyPhoto = styled.img`
   padding: 10px;
 
   @media screen and (max-width: 768px) {
-    max-width: 90px;
-    max-height: 90px;
+    max-width: 72px;
+    max-height: 72px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -339,6 +348,9 @@ const Percentage = styled.p`
   font-size: 24px;
   font-weight: bold;
   padding: 10px;
+  @media screen and (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 const SuccessfulRegistrationText = styled.p`
@@ -352,6 +364,7 @@ const ErrorText = styled.p`
 `;
 
 const UnderlinedSpan = styled.span`
+  font-weight: bolder;
   border-bottom: 6px solid ${ACCENT_COLOR_LIGHT};
 `;
 
@@ -385,28 +398,28 @@ const EmptyUnderlinedButton = styled.button`
   }
 `;
 
-// temp
-const getRandomInt = (min: number, max: number): number => {
-  const minVal = Math.ceil(min);
-  const maxVal = Math.floor(max);
-  return Math.floor(Math.random() * (maxVal - minVal) + minVal);
-};
-
-const RESPUESTAS_POSIBLES_DIPUTADE = ['A favor', 'En contra', 'Abstención', 'No se presentó'];
-const QUIZ_LENGTH = 10;
-
-const getRandomAnswers = (): string[] => {
-  const answers: string[] = [];
-  for (let i = 0; i < QUIZ_LENGTH; i++) {
-    answers.push(RESPUESTAS_POSIBLES_DIPUTADE[getRandomInt(0, 4)]);
+const URLs: URLType[] = [
+  {
+    label: 'Inicio',
+    url: 'https://www.latitud312.com/'
+  },
+  {
+    label: 'Calendario electoral',
+    url: 'https://www.latitud312.com/calendario_electoral/'
+  },
+  {
+    label: 'Federal',
+    url: 'https://www.latitud312.com/federal/'
+  },
+  {
+    label: 'Estados',
+    url: 'https://www.latitud312.com/local/'
+  },
+  {
+    label: 'Alcaldías',
+    url: 'https://www.latitud312.com/#'
   }
-
-  return answers;
-};
-
-const RESPUESTAS_REPRESENTANTE = {
-  answers: getRandomAnswers()
-};
+];
 
 const App: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(-2);
@@ -431,7 +444,7 @@ const App: FC = () => {
   const [respuestasPartidos, setRespuestasPartidos] = useState<PartidoResponse[]>([]);
   const [hasRespuestasPartidoError, setHasRespuestasPartidoError] = useState(false);
   const [respuestasPartidoError, setRespuestasPartidoError] = useState('');
-  const [, setRespuestasDiputade] = useState<RespuestaDP[]>([]);
+  const [respuestasDiputade, setRespuestasDiputade] = useState<RespuestaDP[]>([]);
   const [hasRespuestasDiputadeError, setHasRespuestasDiputadeError] = useState(false);
   const [respuestasDiputadeError, setRespuestasDiputadeError] = useState('');
 
@@ -595,7 +608,7 @@ const App: FC = () => {
               Descubre si tu diputado/a te ha representado bien o si necesitas buscar una alternativa. 
             </IntroCardHeader>
             <IntroCardHeader>
-              Contesta estas 5 preguntas para descubrir la respuesta.  
+              Contesta estas 10 preguntas para descubrir la respuesta.  
             </IntroCardHeader>
           </ParagraphContainer>
           <Button onClick={handleInitQuizClick}>
@@ -773,12 +786,12 @@ const App: FC = () => {
 
   const renderRepResultsCard = () => {
     let percentageResult = 0;
-    const total = RESPUESTAS_REPRESENTANTE.answers.length;
+    const total = respuestasDiputade.length;
 
     for (let i = 0; i < userAnswers.length; i += 1) {
       if (
         ((userAnswers[i] as PreguntaType).respuesta as string).toLowerCase().trim()
-          === RESPUESTAS_REPRESENTANTE.answers[i].toLowerCase().trim()
+          === respuestasDiputade[i].votacion.toLowerCase().trim()
       ) {
         percentageResult += 1;
       }
@@ -862,7 +875,12 @@ const App: FC = () => {
     if (preguntasQuiz) {
       const resp = preguntasQuiz.quiz.pages.map((q, i)=> (
         <RepresentativeAnswer key={q.id_pregunta}>
-          {q.pregunta_corta}: <UnderlinedSpan>{RESPUESTAS_REPRESENTANTE.answers[i]}</UnderlinedSpan>
+          {q.pregunta_corta}: <UnderlinedSpan>
+            {respuestasDiputade[i].votacion.toUpperCase().trim() === 'NA'
+              ? 'SIN INFORMACIÓN SOBRE SU VOTO'
+              : respuestasDiputade[i].votacion.toUpperCase().trim()
+            }
+          </UnderlinedSpan>
         </RepresentativeAnswer>
       ));
   
@@ -1013,64 +1031,67 @@ const App: FC = () => {
   };
 
   return (
-    <Page>
-      <ReactModal
-        isOpen={isModalOpen}
-        contentLabel='¿Dónde encuentro mi sección electoral?'
-        onRequestClose={() => setIsModalOpen(false)}
-        shouldCloseOnOverlayClick={true}
-        aria={{
-          labelledby: 'heading',
-          describedby: 'ine-img'
-        }}
-        style={{
-          overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.75)'
-          },
-          content: {
-            borderRadius: '10px',
-            maxWidth: '600px',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            maxHeight: '550px'
-          }
-        }}
-      >
-        <INEContainer>
-          <h2 id='heading'>¿Dónde encuentro mi sección electoral?</h2>
-          <p>¡Da clic para ver la imagen más cerca!</p>
-          <ImageZoom
-            image={{
-              id: 'ine-img',
-              src: INE_Seccion,
-              alt: 'En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral',
-              style: {
-                maxWidth: '100%',
-                borderRadius: '25px',
-                padding: '20px'
-              }
-            }}
-            zoomImage={{
-              src: INE_Seccion,
-              alt: 'En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral',
-            }}
-          />
-          <Button onClick={() => setIsModalOpen(false)}>
+    <main>
+      <Navbar menuURLs={URLs} brandUrl={'https://www.latitud312.com/'} brandImgSrc={Logo} />
+      <Page>
+        <ReactModal
+          isOpen={isModalOpen}
+          contentLabel='¿Dónde encuentro mi sección electoral?'
+          onRequestClose={() => setIsModalOpen(false)}
+          shouldCloseOnOverlayClick={true}
+          aria={{
+            labelledby: 'heading',
+            describedby: 'ine-img'
+          }}
+          style={{
+            overlay: {
+              backgroundColor: 'rgba(0, 0, 0, 0.75)'
+            },
+            content: {
+              borderRadius: '10px',
+              maxWidth: '600px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              maxHeight: '550px'
+            }
+          }}
+        >
+          <INEContainer>
+            <h2 id='heading'>¿Dónde encuentro mi sección electoral?</h2>
+            <p>¡Da clic para ver la imagen más cerca!</p>
+            <ImageZoom
+              image={{
+                id: 'ine-img',
+                src: INE_Seccion,
+                alt: 'En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral',
+                style: {
+                  maxWidth: '100%',
+                  borderRadius: '25px',
+                  padding: '20px'
+                }
+              }}
+              zoomImage={{
+                src: INE_Seccion,
+                alt: 'En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral',
+              }}
+            />
+            <Button onClick={() => setIsModalOpen(false)}>
             Cerrar
-          </Button>
-        </INEContainer>
-      </ReactModal>
-      <QuizCard id='card-container'>
-        {loading ?
-          <LoaderContainer>
-            <Loader />
-            <LoaderLabel>
+            </Button>
+          </INEContainer>
+        </ReactModal>
+        <QuizCard id='card-container'>
+          {loading ?
+            <LoaderContainer>
+              <Loader />
+              <LoaderLabel>
               Cargando...
-            </LoaderLabel>
-          </LoaderContainer> :
-          renderContent()}
-      </QuizCard>
-    </Page>
+              </LoaderLabel>
+            </LoaderContainer> :
+            renderContent()}
+        </QuizCard>
+      </Page>
+    </main>
   );
 };
 

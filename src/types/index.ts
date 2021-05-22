@@ -43,3 +43,8 @@ export type PartyAnswerType = {
   logo: string;
   answers: string[];
 }
+
+export type URLType = {
+  label: string;
+  url: string;
+}
