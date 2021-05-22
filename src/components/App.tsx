@@ -915,7 +915,7 @@ const App: FC = () => {
             }
           </UnderlinedSpan>
           <YourAnswerSpan>
-            (Tu votaste: {
+            (Tú votaste: {
               ((userAnswers[i] as PreguntaType).respuesta as string).toUpperCase().trim()
             } {
               getEmojiByAnswer(((userAnswers[i] as PreguntaType).respuesta as string).toUpperCase().trim())
