@@ -375,6 +375,7 @@ const ErrorText = styled.p`
 
 const UnderlinedSpan = styled.span`
   font-weight: bolder;
+  line-height: 32px;
   border-bottom: 6px solid ${ACCENT_COLOR_LIGHT};
 `;
 
@@ -904,7 +905,7 @@ const App: FC = () => {
               {resp}
             </AnswersWrapper>
             <Button onClick={() => setCurrentPage(currentPage + 1)}>
-              Ver más resultados
+              Ver resultados por partido
             </Button>
           </CardContentContainer>
         </FullSizeFade>
