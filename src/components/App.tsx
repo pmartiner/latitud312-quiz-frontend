@@ -634,7 +634,7 @@ const App: FC = () => {
               ¿Sabías que estas son las primeras elecciones en las que tu diputado/a puede reelegirse?
             </IntroCardHeader>
             <IntroCardHeader>
-              Descubre si el diputado/a actualmente electo/a de tu distrito te ha representado bien o si necesitas buscar una alternativa. 
+              Descubre si el diputado/a electo/a de tu distrito te ha representado bien o si necesitas buscar una alternativa. 
             </IntroCardHeader>
             <IntroCardHeader>
               Contesta estas 10 preguntas para descubrir la respuesta.  
@@ -799,7 +799,7 @@ const App: FC = () => {
               ¡Tenemos tus resultados!
             </ReadyHeader>
             <ReadyHeader>
-              Te mostraremos qué tanto te representó el diputado/a actualmente electo/a de tu distrito.
+              Te mostraremos qué tanto te representó el diputado/a electo/a en el periodo 2018-2021 en tu distrito.
             </ReadyHeader>
           </ParagraphContainer>
           <Button onClick={() => setCurrentPage(currentPage + 1)}>
@@ -933,7 +933,7 @@ const App: FC = () => {
         <FullSizeFade>
           <CardContentContainer>
             <RepAnswersHeader>
-              Así votó el diputado/a electo/a de tu distrito (distrito {diputade?.distrito || '-1'}):
+              Así votó el diputado/a electo/a en el periodo 2018-2021 de tu distrito (distrito {diputade?.distrito || '-1'}):
             </RepAnswersHeader>
             <AnswersWrapper>
               {resp}
