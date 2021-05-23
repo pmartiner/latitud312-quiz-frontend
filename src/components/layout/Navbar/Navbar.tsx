@@ -11,7 +11,7 @@ import { URLType } from 'types/index';
 
 const NavbarHeader = styled.header`
   position: relative;
-  background-color: #def7ff;
+  background-color: white;
 `;
 
 export const Bars = styled(FaBars)`

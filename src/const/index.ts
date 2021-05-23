@@ -15,125 +15,132 @@ import SP from 'src/assets/images/partidos/SP.svg';
 
 export const ENTIDADES: OptionType[] = [
   {
-    name: 'AGUASCALIENTES',
-    id: '01'
+    id: '01',
+    name: 'Aguascalientes'
   },
   {
-    name: 'BAJA CALIFORNIA',
-    id: '02'
+    id: '02',
+    name: 'Baja California'
   },
   {
-    name: 'BAJA CALIFORNIA SUR',
-    id: '03'
+    id: '03',
+    name: 'Baja California Sur'
   },
   {
-    name: 'CAMPECHE',
-    id: '04'
+    id: '04',
+    name: 'Campeche'
   },
   {
-    name: 'COAHUILA',
-    id: '05'
+    id: '07',
+    name: 'Chiapas'
   },
   {
-    name: 'COLIMA',
-    id: '06'
+    id: '08',
+    name: 'Chihuahua'
   },
   {
-    name: 'CHIAPAS',
-    id: '07'
+    id: '09',
+    name: 'Ciudad de México'
   },
   {
-    name: 'CHIHUAHUA',
-    id: '08'
+    id: '05',
+    name: 'Coahuila'
   },
   {
-    name: 'CIUDAD DE MEXICO',
-    id: '09'
+    id: '06',
+    name: 'Colima'
   },
   {
-    name: 'DURANGO',
-    id: '10'
+    id: '10',
+    name: 'Durango'
   },
   {
-    name: 'GUANAJUATO',
-    id: '11'
+    id: '11',
+    name: 'Guanajuato'
   },
   {
-    name: 'GUERRERO',
-    id: '12'
+    id: '12',
+    name: 'Guerrero'
   },
   {
-    name: 'HIDALGO',
-    id: '13'
+    id: '13',
+    name: 'Hidalgo'
   },
   {
-    name: 'JALISCO',
-    id: '14'
+    id: '14',
+    name: 'Jalisco'
   },
   {
-    name: 'MEXICO',
-    id: '15'
+    id: '15',
+    name: 'Estado de México'
   },
   {
-    name: 'MICHOACAN',
-    id: '16'
+    id: '16',
+    name: 'Michoacán'
   },
   {
-    name: 'MORELOS',
-    id: '17'
+    id: '17',
+    name: 'Morelos'
   },
   {
-    name: 'NAYARIT',
-    id: '18'
+    id: '18',
+    name: 'Nayarit'
   },
   {
-    name: 'NUEVO LEON',
-    id: '19'
+    id: '19',
+    name: 'Nuevo León'
   },
   {
-    name: 'OAXACA',
-    id: '20'
+    id: '20',
+    name: 'Oaxaca'
   },
   {
-    name: 'PUEBLA',
-    id: '21'
+    id: '21',
+    name: 'Puebla'
   },
   {
-    name: 'QUERETARO',
-    id: '22'
+    id: '22',
+    name: 'Querétaro'
   },
   {
-    name: 'QUINTANA ROO',
-    id: '23'
+    id: '23',
+    name: 'Quintana Roo'
   },
   {
-    name: 'SAN LUIS POTOSI',
-    id: '24'
+    id: '24',
+    name: 'San Luis Potosí'
   },
   {
-    name: 'SINALOA',
-    id: '25'
+    id: '25',
+    name: 'Sinaloa'
   },
   {
-    name: 'TAMAULIPAS',
-    id: '28'
+    id: '26',
+    name: 'Sonora'
   },
   {
-    name: 'TLAXCALA',
-    id: '29'
+    id: '27',
+    name: 'Tabasco'
   },
   {
-    name: 'VERACRUZ',
-    id: '30'
+    id: '28',
+    name: 'Tamaulipas'
   },
   {
-    name: 'YUCATAN',
-    id: '31'
+    id: '29',
+    name: 'Tlaxcala'
   },
   {
-    name: 'ZACATECAS',
-    id: '32'
-  }
+    id: '30',
+    name: 'Veracruz'
+  },
+  {
+    id: '31',
+    name: 'Yucatán'
+  },
+  {
+    id: '32',
+    name: 'Zacatecas' }
 ];
 
 export const PARTIDOS = [

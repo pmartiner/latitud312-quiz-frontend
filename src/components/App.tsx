@@ -634,7 +634,7 @@ const App: FC = () => {
               ¿Sabías que estas son las primeras elecciones en las que tu diputado/a puede reelegirse?
             </IntroCardHeader>
             <IntroCardHeader>
-              Descubre si tu diputado/a te ha representado bien o si necesitas buscar una alternativa. 
+              Descubre si el diputado/a actualmente electo/a de tu distrito te ha representado bien o si necesitas buscar una alternativa. 
             </IntroCardHeader>
             <IntroCardHeader>
               Contesta estas 10 preguntas para descubrir la respuesta.  
@@ -798,6 +798,9 @@ const App: FC = () => {
             <ReadyHeader>
               ¡Tenemos tus resultados!
             </ReadyHeader>
+            <ReadyHeader>
+              Te mostraremos qué tanto te representó el diputado/a actualmente electo/a de tu distrito.
+            </ReadyHeader>
           </ParagraphContainer>
           <Button onClick={() => setCurrentPage(currentPage + 1)}>
             Continuar
@@ -840,7 +843,7 @@ const App: FC = () => {
       <FullSizeFade>
         <CardContentContainer>
           <ResHeader>
-            Diputado/a federal de tu distrito:
+            Vives en el distrito {diputade?.distrito || -1} y el diputado/a actualmente electo/a ahí es...
           </ResHeader>
           <DiputadeContainer>
             <DiputadePhotoContainer>
@@ -879,7 +882,9 @@ const App: FC = () => {
             </DiputadeTextContainer>
           </DiputadeContainer>
           <RepresentationLabel>
-            De acuerdo con tus respuestas, el diputado/a de tu distrito te representa en este porcentaje:
+            <span>
+              <strong>De acuerdo con tus respuestas, el diputado/a de tu distrito se parece a ti en...</strong>
+            </span>
           </RepresentationLabel>
           <MeterContainer>
             <ProgressBar
@@ -928,7 +933,7 @@ const App: FC = () => {
         <FullSizeFade>
           <CardContentContainer>
             <RepAnswersHeader>
-              Así votó tu diputado/a (distrito {diputade?.distrito || '-1'}):
+              Así votó el diputado/a electo/a de tu distrito (distrito {diputade?.distrito || '-1'}):
             </RepAnswersHeader>
             <AnswersWrapper>
               {resp}
