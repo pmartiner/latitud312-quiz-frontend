@@ -611,13 +611,15 @@ const App: FC = () => {
       });
   };
 
-  const handleUserAnswer = (e: ChangeEvent<HTMLInputElement>, distrito: number, id_pregunta: number) => {
+  const handleUserAnswer = (e: ChangeEvent<HTMLInputElement>, id_pregunta: number) => {
     const currentUserAnswers = [...userAnswers];
 
     if (currentPage >= 0 && currentPage < currentUserAnswers.length) {
       currentUserAnswers[currentPage] = {
         id_pregunta,
         distrito_usuarie: distrito,
+        entidad,
+        seccion,
         respuesta: e.target.value
       };
       setUserAnswers(currentUserAnswers);
@@ -716,7 +718,7 @@ const App: FC = () => {
               <RadioButton
                 id={`${preguntasQuiz.quiz.pages[currentPage].input.type}-${val.value.split(' ').join('-')}-${preguntasQuiz.quiz.pages[currentPage].id_pregunta}`}
                 value={val.value}
-                onChange={(e) => handleUserAnswer(e, distrito, preguntasQuiz.quiz.pages[currentPage].id_pregunta)}
+                onChange={(e) => handleUserAnswer(e, preguntasQuiz.quiz.pages[currentPage].id_pregunta)}
                 name={`question-${preguntasQuiz.quiz.pages[currentPage].id_pregunta}`}
               />
               <label

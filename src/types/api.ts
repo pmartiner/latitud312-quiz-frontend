@@ -49,6 +49,8 @@ export type PreguntaType = {
   id_pregunta: number;
   respuesta: string | number | boolean | string[] | number[] | boolean[];
   distrito_usuarie: number;
+  entidad: string;
+  seccion: string;
 }
 
 export type SetPreguntaRequest = PreguntaType | '';
