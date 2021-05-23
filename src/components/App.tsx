@@ -323,6 +323,15 @@ const PartyPhoto = styled.img`
   }
 `;
 
+const PartyResultsPhoto = styled(PartyPhoto)`
+  @media screen and (max-width: 1024px) {
+    max-width: 50px;
+    max-height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+`;
+
 const MeterContainer = styled.div`
   display: flex;
   flex-flow: row nowrap;
@@ -330,6 +339,12 @@ const MeterContainer = styled.div`
   justify-content: space-evenly;
   width: 100%;
   padding: 20px 0;
+`;
+
+const PartyResultsMeterContainer = styled(MeterContainer)`
+  @media screen and (max-width: 1024px) {
+    padding: 0;
+  }
 `;
 
 const RepAnswersHeader = styled(ResHeader)`
@@ -353,6 +368,10 @@ const PartyPercentageContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
+
+  @media screen and (max-width: 1024px) {
+    padding: 0;
+  }
 `;
 
 const Percentage = styled.p`
@@ -972,11 +991,11 @@ const App: FC = () => {
 
       return (
         <PartyPercentageContainer key={r.id}>
-          <PartyPhoto
+          <PartyResultsPhoto
             src={partido?.photo || ''}
             alt={partido?.longName || 'Partido político'}
           />
-          <MeterContainer>
+          <PartyResultsMeterContainer>
             <ProgressBar
               progress={percentageResult}
               meterColor={r.color}
@@ -986,7 +1005,7 @@ const App: FC = () => {
                 {percentageResult}%
               </Percentage>
             </ProgressBar>
-          </MeterContainer>
+          </PartyResultsMeterContainer>
         </PartyPercentageContainer>
       );
     });
