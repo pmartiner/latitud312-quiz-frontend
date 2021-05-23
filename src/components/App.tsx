@@ -661,7 +661,7 @@ const App: FC = () => {
               Para poder comenzar, escribe tu sección electoral (que encontrarás en tu credencial de elector) y tu estado.
             </IntroCardHeader>
             <IntroCardHeader>
-              Únicamente utilizaremos estos datos para determinar a los y las representantes de tu distrito.
+              Únicamente utilizaremos estos datos para determinar al diputado/a que actualmente representa a tu distrito en el Congreso.
             </IntroCardHeader>
             <IntroCardHeader>
               Haz clic
