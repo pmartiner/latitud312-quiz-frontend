@@ -932,7 +932,7 @@ const App: FC = () => {
         <RepresentativeAnswer key={q.id_pregunta}>
           {q.pregunta_corta}: <UnderlinedSpan>
             {respuestasDiputade[i].votacion.toUpperCase().trim() === 'NA'
-              ? 'SIN INFORMACIÓN SOBRE SU VOTO'
+              ? 'NO SE POSICIONÓ'
               : `${
                 respuestasDiputade[i].votacion.toUpperCase().trim()
               } ${
