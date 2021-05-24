@@ -953,15 +953,25 @@ const App: FC = () => {
       return (
         <FullSizeFade>
           <CardContentContainer>
+            <QuizQuestionHeader>
+              <MobileBackButton onClick={() => setCurrentPage(currentPage - 1)}>
+                Atrás
+              </MobileBackButton>
+            </QuizQuestionHeader>
             <RepAnswersHeader>
               Así votó el diputado/a electo/a en el periodo 2018-2021 de tu distrito (distrito {diputade?.distrito || '-1'}):
             </RepAnswersHeader>
             <AnswersWrapper>
               {resp}
             </AnswersWrapper>
-            <Button onClick={() => setCurrentPage(currentPage + 1)}>
-              Ver resultados por partido
-            </Button>
+            <QuizQuestionFooter>
+              <DesktopBackButton onClick={() => setCurrentPage(currentPage - 1)}>
+                Atrás
+              </DesktopBackButton>
+              <Button onClick={() => setCurrentPage(currentPage + 1)}>
+                Ver resultados por partido
+              </Button>
+            </QuizQuestionFooter>
           </CardContentContainer>
         </FullSizeFade>
       );
@@ -1016,15 +1026,25 @@ const App: FC = () => {
     return (
       <FullSizeFade>
         <CardContentContainer>
+          <QuizQuestionHeader>
+            <MobileBackButton onClick={() => setCurrentPage(currentPage - 1)}>
+              Atrás
+            </MobileBackButton>
+          </QuizQuestionHeader>
           <RepAnswersHeader>
             Con base en tus respuestas, así te representan la mayoría de las bancadas de los partidos:
           </RepAnswersHeader>
           <AnswersWrapper>
             {resp}
           </AnswersWrapper>
-          <Button onClick={() => setCurrentPage(currentPage + 1)}>
-            ¡Listo!
-          </Button>
+          <QuizQuestionFooter>
+            <DesktopBackButton onClick={() => setCurrentPage(currentPage - 1)}>
+              Atrás
+            </DesktopBackButton>
+            <Button onClick={() => setCurrentPage(currentPage + 1)}>
+              ¡Listo!
+            </Button>
+          </QuizQuestionFooter>
         </CardContentContainer>
       </FullSizeFade>
     );
