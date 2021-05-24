@@ -971,13 +971,16 @@ const App: FC = () => {
   const renderPartyAnswers = () => {
     const resp = respuestasPartidos.map((r) => {
       let percentageResult = 0;
-      const total = respuestasPartidos.length;
+      let total = userAnswers.length;
 
       const partido = PARTIDOS.find(p => p.name === r.name.toUpperCase())
         || PARTIDOS.find(p => p.name === 'SP');
 
       for (let i = 0; i < userAnswers.length; i += 1) {
-        if (
+        if (r.answers[i].votacion.toLowerCase().trim() === 'na' && total > 0 && percentageResult > 0) {
+          total -= 1;
+        }
+        else if (
           ((userAnswers[i] as PreguntaType).respuesta as string).toLowerCase().trim()
             === r.answers[i].votacion.toLowerCase().trim()
         ) {

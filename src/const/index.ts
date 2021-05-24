@@ -140,7 +140,8 @@ export const ENTIDADES: OptionType[] = [
   },
   {
     id: '32',
-    name: 'Zacatecas' }
+    name: 'Zacatecas'
+  }
 ];
 
 export const PARTIDOS = [
