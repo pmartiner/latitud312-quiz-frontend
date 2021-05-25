@@ -530,7 +530,11 @@ const App: FC = () => {
       })
       .catch((err: AxiosError) => {
         console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
-        setGetPreguntasError(`${err.response?.data.description}`);
+        setGetPreguntasError(
+          `${err.response?.data.description
+            ? err.response.data.description
+            : 'Hubo un problema con nuestro servidor. Por favor espera unos minutos e intenta nuevamente.'}`
+        );
         setHasGetPreguntasError(true);
       })
       .finally(() => {
@@ -568,7 +572,9 @@ const App: FC = () => {
       })
       .catch((err: AxiosError) => {
         console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
-        setSeccionError(`${err.response?.data.description}`);
+        setSeccionError(`${err.response?.data.description
+          ? err.response.data.description
+          : 'Hubo un problema con nuestro servidor. Por favor espera unos minutos e intenta nuevamente.'}`);
         setHasSeccionError(true);
         setSeccion('');
         setEntidad('');
@@ -587,7 +593,9 @@ const App: FC = () => {
       })
       .catch((err: AxiosError) => {
         console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
-        setSendingError(`${err.response?.data.description}`);
+        setSendingError(`${err.response?.data.description
+          ? err.response.data.description
+          : 'Hubo un problema con nuestro servidor. Por favor espera unos minutos e intenta nuevamente.'}`);
         setHasSendingError(true);
       });
     getRespuestasDiputade(diputade?.id_legislativo || 0)
@@ -596,7 +604,9 @@ const App: FC = () => {
       })
       .catch((err: AxiosError) => {
         console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
-        setRespuestasDiputadeError(`${err.response?.data.description}`);
+        setRespuestasDiputadeError(`${err.response?.data.description
+          ? err.response.data.description
+          : 'Hubo un problema con nuestro servidor. Por favor espera unos minutos e intenta nuevamente.'}`);
         setHasRespuestasDiputadeError(true);
       });
     getRespuestasPartidos()
@@ -605,7 +615,9 @@ const App: FC = () => {
       })
       .catch((err: AxiosError) => {
         console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
-        setRespuestasPartidoError(`${err.response?.data.description}`);
+        setRespuestasPartidoError(`${err.response?.data.description
+          ? err.response.data.description
+          : 'Hubo un problema con nuestro servidor. Por favor espera unos minutos e intenta nuevamente.'}`);
         setHasRespuestasPartidoError(true);
       });
     setLoading(false);
@@ -622,7 +634,9 @@ const App: FC = () => {
       })
       .catch((err: AxiosError) => {
         console.error(`${err.response?.statusText} ${err.response?.status}: ${err.response?.data.description}`);
-        setEmailError(`${err.response?.data.description}`);
+        setEmailError(`${err.response?.data.description
+          ? err.response.data.description
+          : 'Hubo un problema con nuestro servidor. Por favor espera unos minutos e intenta nuevamente.'}`);
         setHasEmailError(true);
       })
       .finally(() => {
