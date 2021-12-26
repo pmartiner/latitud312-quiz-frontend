@@ -68,10 +68,14 @@ const webpackConfig = (env: EnvVars): Configuration => {
     },
     target: env.development ? 'web' : 'browserslist',
     devServer: {
-      contentBase: path.join(__dirname, 'public'),
+      static: {
+        directory: path.join(__dirname, 'public'),
+      },
       compress: true,
       hot: true,
-      overlay: true,
+      client: {
+        overlay: true,
+      },
       open: true,
       port: 3000
     },
@@ -110,6 +114,13 @@ const webpackConfig = (env: EnvVars): Configuration => {
         {
           test: /\.(png|svg|jpg|gif)$/i,
           use: 'file-loader'
+        },
+        {
+          test: /\.css$/i,
+          use: [
+            'style-loader',
+            'css-loader'
+          ],
         },
       ],
     },

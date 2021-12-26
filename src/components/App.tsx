@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { Fade } from 'react-awesome-reveal';
 import { isIE } from 'react-device-detect';
 import ReactModal from 'react-modal';
-import ImageZoom from 'react-medium-image-zoom';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 // Componentes
 import Page from 'components/layout/Page/Page';
@@ -1171,22 +1172,18 @@ const App: FC = () => {
           <INEContainer>
             <h2 id='heading'>¿Dónde encuentro mi sección electoral?</h2>
             <p>¡Da clic para ver la imagen más cerca!</p>
-            <ImageZoom
-              image={{
-                id: 'ine-img',
-                src: INE_Seccion,
-                alt: 'En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral',
-                style: {
+            <Zoom zoomMargin={80}>
+              <img
+                id='ine-img'
+                src={INE_Seccion}
+                alt='En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral'
+                style={{
                   maxWidth: '100%',
                   borderRadius: '25px',
                   padding: '20px'
-                }
-              }}
-              zoomImage={{
-                src: INE_Seccion,
-                alt: 'En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral',
-              }}
-            />
+                }}
+              />
+            </Zoom>
             <Button onClick={() => setIsModalOpen(false)}>
             Cerrar
             </Button>
