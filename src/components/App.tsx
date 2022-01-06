@@ -51,6 +51,9 @@ import {
   SUCCESS_COLOR
 } from 'components/layout/const';
 
+// Estilos
+import GlobalStyle from 'components/layout/global';
+
 // Assets
 import INE_Seccion from 'src/assets/images/partidos/INE_Seccion.jpg';
 import NoPhoto from 'src/assets/images/no-photo.png';
@@ -1144,63 +1147,66 @@ const App: FC = () => {
   };
 
   return (
-    <main>
-      <Navbar menuURLs={URLs} brandUrl={'https://www.latitud312.com/'} brandImgSrc={Logo} />
-      <Page>
-        <ReactModal
-          isOpen={isModalOpen}
-          contentLabel='¿Dónde encuentro mi sección electoral?'
-          onRequestClose={() => setIsModalOpen(false)}
-          shouldCloseOnOverlayClick={true}
-          aria={{
-            labelledby: 'heading',
-            describedby: 'ine-img'
-          }}
-          style={{
-            overlay: {
-              backgroundColor: 'rgba(0, 0, 0, 0.75)'
-            },
-            content: {
-              borderRadius: '10px',
-              maxWidth: '600px',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              maxHeight: '550px'
-            }
-          }}
-        >
-          <INEContainer>
-            <h2 id='heading'>¿Dónde encuentro mi sección electoral?</h2>
-            <p>¡Da clic para ver la imagen más cerca!</p>
-            <Zoom zoomMargin={80}>
-              <img
-                id='ine-img'
-                src={INE_Seccion}
-                alt='En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral'
-                style={{
-                  maxWidth: '100%',
-                  borderRadius: '25px',
-                  padding: '20px'
-                }}
-              />
-            </Zoom>
-            <Button onClick={() => setIsModalOpen(false)}>
-            Cerrar
-            </Button>
-          </INEContainer>
-        </ReactModal>
-        <QuizCard id='card-container'>
-          {loading ?
-            <LoaderContainer>
-              <Loader />
-              <LoaderLabel>
-              Cargando...
-              </LoaderLabel>
-            </LoaderContainer> :
-            renderContent()}
-        </QuizCard>
-      </Page>
-    </main>
+    <>
+      <GlobalStyle />
+      <main>
+        <Navbar menuURLs={URLs} brandUrl={'https://www.latitud312.com/'} brandImgSrc={Logo} />
+        <Page>
+          <ReactModal
+            isOpen={isModalOpen}
+            contentLabel='¿Dónde encuentro mi sección electoral?'
+            onRequestClose={() => setIsModalOpen(false)}
+            shouldCloseOnOverlayClick={true}
+            aria={{
+              labelledby: 'heading',
+              describedby: 'ine-img'
+            }}
+            style={{
+              overlay: {
+                backgroundColor: 'rgba(0, 0, 0, 0.75)'
+              },
+              content: {
+                borderRadius: '10px',
+                maxWidth: '600px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                maxHeight: '550px'
+              }
+            }}
+          >
+            <INEContainer>
+              <h2 id='heading'>¿Dónde encuentro mi sección electoral?</h2>
+              <p>¡Da clic para ver la imagen más cerca!</p>
+              <Zoom zoomMargin={80}>
+                <img
+                  id='ine-img'
+                  src={INE_Seccion}
+                  alt='En la esquina inferior derecha se encuentra un campo llamado "SECCION", donde encontrarás tu sección electoral'
+                  style={{
+                    maxWidth: '100%',
+                    borderRadius: '25px',
+                    padding: '20px'
+                  }}
+                />
+              </Zoom>
+              <Button onClick={() => setIsModalOpen(false)}>
+                Cerrar
+              </Button>
+            </INEContainer>
+          </ReactModal>
+          <QuizCard id='card-container'>
+            {loading ?
+              <LoaderContainer>
+                <Loader />
+                <LoaderLabel>
+                  Cargando...
+                </LoaderLabel>
+              </LoaderContainer> :
+              renderContent()}
+          </QuizCard>
+        </Page>
+      </main>
+    </>
   );
 };
 
