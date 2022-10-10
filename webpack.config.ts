@@ -26,21 +26,21 @@ const babelOptions = {
       {
         useBuiltIns: 'usage',
         corejs: 3,
-      }
+      },
     ],
     [
       '@babel/preset-react',
       {
-        runtime: 'automatic'
-      }
-    ]
+        runtime: 'automatic',
+      },
+    ],
   ],
   plugins: [
     '@babel/plugin-transform-runtime',
     '@babel/proposal-class-properties',
-    '@babel/proposal-object-rest-spread'
+    '@babel/proposal-object-rest-spread',
   ],
-  sourceType: 'unambiguous'
+  sourceType: 'unambiguous',
 };
 
 const webpackConfig = (env: EnvVars): Configuration => {
@@ -60,11 +60,11 @@ const webpackConfig = (env: EnvVars): Configuration => {
       //@ts-ignore
       plugins: [new TsconfigPathsPlugin()],
       alias: {
-        'src': path.resolve(__dirname, 'src/'),
-        'api': path.resolve(__dirname, 'src/api'),
-        'components': path.resolve(__dirname, 'src/components/'),
-        'types': path.resolve(__dirname, 'src/types/'),
-      }
+        src: path.resolve(__dirname, 'src/'),
+        api: path.resolve(__dirname, 'src/api'),
+        components: path.resolve(__dirname, 'src/components/'),
+        types: path.resolve(__dirname, 'src/types/'),
+      },
     },
     target: env.development ? 'web' : 'browserslist',
     devServer: {
@@ -77,11 +77,11 @@ const webpackConfig = (env: EnvVars): Configuration => {
         overlay: true,
       },
       open: true,
-      port: 3000
+      port: 3000,
     },
     output: {
       path: path.join(__dirname, 'dist'),
-      filename: '[name]-[contenthash].js'
+      filename: '[name]-[contenthash].js',
     },
     module: {
       rules: [
@@ -91,15 +91,15 @@ const webpackConfig = (env: EnvVars): Configuration => {
           use: [
             {
               loader: 'babel-loader',
-              options: babelOptions
+              options: babelOptions,
             },
             {
               loader: 'ts-loader',
               options: {
-                transpileOnly: true
-              }
-            }
-          ]
+                transpileOnly: true,
+              },
+            },
+          ],
         },
         {
           test: /\.m?js$/,
@@ -107,63 +107,64 @@ const webpackConfig = (env: EnvVars): Configuration => {
           use: [
             {
               loader: 'babel-loader',
-              options: babelOptions
-            }
-          ]
+              options: babelOptions,
+            },
+          ],
         },
         {
           test: /\.(png|svg|jpg|gif)$/i,
-          use: 'file-loader'
+          use: 'file-loader',
         },
         {
           test: /\.css$/i,
-          use: [
-            'style-loader',
-            'css-loader'
-          ],
+          use: ['style-loader', 'css-loader'],
         },
       ],
     },
     plugins: [
-        new HtmlWebpackPlugin({
-          hash: true,
-          filename: 'index.html',
-          template: './public/index.html',
-          minify: {
-            minifyCSS: true,
-            collapseWhitespace: true,
-            keepClosingSlash: true,
-            removeComments: true,
-            removeRedundantAttributes: true,
-            removeScriptTypeAttributes: true,
-            removeStyleLinkTypeAttributes: true,
-            useShortDoctype: true
-          }
-        }),
-        new ESLintPlugin({
-          extensions: ['.tsx', '.ts', '.js']
-        }),
-        new webpack.DefinePlugin({
-          'process.env.PRODUCTION': env.production || !env.development,
-          'process.env.NAME': JSON.stringify(require('./package.json').name),
-          'process.env.VERSION': JSON.stringify(require('./package.json').version)
-        }),
-        new webpack.ProvidePlugin({
-          process: 'process/browser',
-        }),
-        new ForkTsCheckerWebpackPlugin({
-          eslint: {
-            files: './src/**/*.{ts,tsx,js,jsx}' // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
-          }
-        }),
-        new Dotenv(),
-        () => env.development && new ReactRefreshPlugin({
+      new HtmlWebpackPlugin({
+        hash: true,
+        filename: 'index.html',
+        template: './public/index.html',
+        minify: {
+          minifyCSS: true,
+          collapseWhitespace: true,
+          keepClosingSlash: true,
+          removeComments: true,
+          removeRedundantAttributes: true,
+          removeScriptTypeAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          useShortDoctype: true,
+        },
+      }),
+      new ESLintPlugin({
+        extensions: ['.tsx', '.ts', '.js'],
+      }),
+      new webpack.DefinePlugin({
+        'process.env.PRODUCTION': env.production || !env.development,
+        'process.env.NAME': JSON.stringify(require('./package.json').name),
+        'process.env.VERSION': JSON.stringify(require('./package.json').version),
+      }),
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+      }),
+      new ForkTsCheckerWebpackPlugin({
+        eslint: {
+          files: './src/**/*.{ts,tsx,js,jsx}', // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
+        },
+      }),
+      new Dotenv({
+        systemvars: true,
+      }),
+      () =>
+        env.development &&
+        new ReactRefreshPlugin({
           overlay: {
             sockIntegration: 'wds',
-          }
-        })
-    ]
-  }
+          },
+        }),
+    ],
+  };
 };
 
 export default webpackConfig;
