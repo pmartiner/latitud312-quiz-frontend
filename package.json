@@ -55,7 +55,7 @@
     "webpack-dev-server": "^4.7.1"
   },
   "dependencies": {
-    "axios": "^0.24.0",
+    "axios": "^0.28.0",
     "core-js": "^3.20.1",
     "dotenv-webpack": "^7.0.3",
     "intersection-observer": "^0.12.0",
